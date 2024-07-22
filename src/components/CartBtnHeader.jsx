@@ -1,0 +1,57 @@
+import React from "react";
+import { BiBasket, BiCircle } from "react-icons/bi";
+import { useSelector } from "react-redux";
+import { CustomProvider, Dropdown, IconButton } from "rsuite";
+import emptyCartAnimation from "../assets/emptyCartAnimation.json";
+import Lottie from "react-lottie-player";
+import CartProductCard from "./CartProductCard";
+function CartBtnHeader() {
+  const productsFromCart = useSelector((state) => state.cart.products);
+
+  const cartBtnLogo = (props, ref) => (
+    <button {...props} ref={ref} className="  h-full mt-2 text-3xl">
+      <BiBasket />
+      {productsFromCart.length > 0 && (
+        <span className="text-blue-700 absolute  w-5 flex  justify-center h-5 bottom-1 font-semibold right-0 bg-orange-300  text-sm rounded-full">
+          {productsFromCart.length}
+        </span>
+      )}
+    </button>
+  );
+  return (
+    <CustomProvider>
+      <div className=" relative">
+        <Dropdown
+          placement="bottomEnd"
+          noCaret
+          menuStyle={{
+            width: "15rem",
+            marginTop: 5,
+          }}
+          renderToggle={cartBtnLogo}
+        >
+          {productsFromCart.length > 0 ? (
+            <div className="py-2 flex flex-col  ">
+              {productsFromCart.map((item, index) => {
+                return <CartProductCard key={index} product={item} from="cart" />;
+              })}
+            </div>
+          ) : (
+            <div className=" p-2 flex justify-center flex-col items-center gap-2">
+              <Lottie
+                play
+                loop
+                animationData={emptyCartAnimation}
+                style={{ alignSelf: "center" }}
+              />
+              <p>Nothing To Show</p>
+            </div>
+          )}
+        </Dropdown>
+      </div>
+    </CustomProvider>
+  );
+}
+
+export default CartBtnHeader;
+
