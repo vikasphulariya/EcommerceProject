@@ -19,10 +19,17 @@ import { useDispatch } from "react-redux";
 import { removeUser, setUser } from "./app/store/userSlice.js";
 import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
+import { loadCartFromCloud } from "./app/firebase/manageCart.js";
+import { loadCartFromCloudAsync } from "./app/store/cartSlice.js";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
-    <Route key={""} path="/" ErrorBoundary={"scsd"} errorElement={<NoPage />} element={<PageLayout />}>
+    <Route
+      key={""}
+      path="/"
+      errorElement={<NoPage />}
+      element={<PageLayout />}
+    >
       <Route path="/" element={<Home />} />
       <Route path="/" element={<Home />} />
     </Route>,
@@ -54,15 +61,18 @@ function App() {
     getDataFromLocal();
   }, []);
 
-  const getDataFromLocal = () => {
+  const getDataFromLocal = async () => {
     const data = localStorage.getItem("User");
     const user = JSON.parse(data);
     if (user && user.emailVerified) {
       dispatch(setUser(user));
+      dispatch(loadCartFromCloudAsync());
     } else {
       dispatch(removeUser());
     }
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 400);
   };
 
   if (loading) {

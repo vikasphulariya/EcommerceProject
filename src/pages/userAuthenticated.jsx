@@ -11,7 +11,7 @@ function UserAuthenticated({ children }) {
 
   useEffect(() => {
     if (user && user.emailVerified) {
-      setTimeout(() => {
+      setTimeout(() => {xx``
         navigate("/", { replace: true });
       }, 300);
     } else {

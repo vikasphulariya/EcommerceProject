@@ -1,30 +1,31 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
   addProduct,
+  addProductToCartAsync,
   removeProduct,
+  removeProductFromCartAsync,
   updateProduct,
+  updateProductInCartAsync,
 } from "../app/store/cartSlice";
 import { PiMinusCircle, PiPlusCircle } from "react-icons/pi";
 
-function AddToCartBtn({ product ,className}) {
+function AddToCartBtn({ product, className }) {
   const dispatch = useDispatch();
-  
+
   const productFromCart = useSelector((state) =>
     state.cart.products.find((item) => item.id === product.id)
   );
 
-
-
   const addToCart = () => {
-    dispatch(addProduct(product));
+    dispatch(addProductToCartAsync(product));
   };
 
   const updateProuctQuantity = (value) => {
     if (productFromCart) {
       if (productFromCart.quantity === 1 && value === -1) {
-        dispatch(removeProduct({ id: product.id }));
+        dispatch(removeProductFromCartAsync(product));
       } else {
-        dispatch(updateProduct({ id: product.id, value }));
+        dispatch(updateProductInCartAsync({ product: productFromCart, value }));
       }
     }
   };
