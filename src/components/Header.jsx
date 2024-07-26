@@ -17,7 +17,7 @@ function Header() {
               <span className=" text-nowrap">Noobie Store</span>
             </Link>
           </div>
-          <div className="header-links text-xl hidden sm:flex">
+          <div className="header-links text-xl hidden md:flex">
             <ul className=" flex gap-10">
               <NavLink
                 to="/"

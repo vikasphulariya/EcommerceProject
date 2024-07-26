@@ -4,6 +4,8 @@ import { auth, db } from "./firebase";
 import { setUser, removeUser } from "../store/userSlice";
 import { store } from "../store/store";
 import { doc, getDoc } from "firebase/firestore";
+import { loadCartFromCloudAsync } from "../store/cartSlice";
+import { loadwishlistFromCloudAsync } from "../store/wishlistSlice";
 
 export const loginWithFirebase = async (email, password) => {
   try {
@@ -21,6 +23,8 @@ export const loginWithFirebase = async (email, password) => {
         store.dispatch(
           setUser({ ...userInfo, emailVerified: result.user.emailVerified })
         );
+        store.dispatch(loadCartFromCloudAsync())
+        store.dispatch(loadwishlistFromCloudAsync())
       }
     }
     return result;

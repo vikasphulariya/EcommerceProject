@@ -1,12 +1,13 @@
 import { MdClose } from "react-icons/md";
 import AddToCartBtn from "./AddToCartBtn";
 import { useDispatch } from "react-redux";
+import { removeProductFromCartAsync } from "../app/store/cartSlice";
 
 function CartProductCard({ product }) {
   const dispatch = useDispatch();
 
   const removeProductFromCart = () => {
-    dispatch(remove({ id: product.id }));
+    dispatch(removeProductFromCartAsync(product));
   };
 
   return (

@@ -3,7 +3,7 @@ import { CustomProvider, Dropdown, IconButton } from "rsuite";
 import "rsuite/dist/rsuite-no-reset.min.css";
 
 import { auth } from "../app/firebase/firebase";
-import {  Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GoHeartFill } from "react-icons/go";
 import { LiaShippingFastSolid } from "react-icons/lia";
 import { IoMdLogOut } from "react-icons/io";
@@ -11,13 +11,17 @@ import { BsCart3 } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../app/store/userSlice";
 import { toast } from "react-toastify";
+import { clearCart } from "../app/store/cartSlice";
+import { clearWishlist } from "../app/store/wishlistSlice";
 function ProfileBtn() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
-
+  const naviagte = useNavigate();
   const logout = async () => {
     await auth.signOut().then(() => {
       dispatch(removeUser());
+      dispatch(clearCart());
+      dispatch(clearWishlist());
       toast("Log Out Successfull");
     });
   };
@@ -41,7 +45,13 @@ function ProfileBtn() {
       >
         {user ? (
           <>
-            <Dropdown.Item eventKey="1" icon={<BiUser />}>
+            <Dropdown.Item
+              eventKey="1"
+              onClick={() => {
+                naviagte("/profile");
+              }}
+              icon={<BiUser />}
+            >
               <Link to="/profile"> Profile</Link>
             </Dropdown.Item>
             <Dropdown.Item eventKey="1" icon={<GoHeartFill color="red" />}>

@@ -51,11 +51,6 @@ export const updateProductInCartAsync = createAsyncThunk(
   }
 );
 
-
-
-
-
-
 export const loadCartFromCloudAsync = createAsyncThunk(
   "cart/loadCart",
   async (_, thunkAPI) => {
@@ -72,21 +67,14 @@ export const loadCartFromCloudAsync = createAsyncThunk(
   }
 );
 
-
-
-
-
-
-
-
-
-
-
-
 const cartSlice = createSlice({
   name: "cart",
   initialState: { products: [] },
-  reducers: {},
+  reducers: {
+    clearCart: (state, action) => {
+      state.products = [];
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(addProductToCartAsync.fulfilled, (state, action) => {
       state.products.push(action.payload);
@@ -112,7 +100,7 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addProduct, removeProduct, updateProduct } = cartSlice.actions;
+export const { clearCart} = cartSlice.actions;
 
 export default cartSlice.reducer;
 

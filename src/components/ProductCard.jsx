@@ -4,25 +4,12 @@ import { FaRegHeart } from "react-icons/fa";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { Link } from "react-router-dom";
 import AddToCartBtn from "./AddToCartBtn";
+import AddToWishlist from "./AddToWishlist";
 
 function ProductCard({ product }) {
-  const [isWishlisted, setIsWishlisted] = useState(false);
   return (
-    <div className="card relative  w-max rounded-md p-2 hover:border-gray-200 hover:shadow-md transition-all duration-150   border   border-white">
-      <label
-        htmlFor={product.id}
-        onClick={() => {}}
-        className=" absolute bg-red-100 bg-opacity-45  cursor-pointer  text-red-800  rounded-full p-2 text-2xl left-3 top-2  "
-      >
-        <input
-          type="checkbox"
-          className="sr-only"
-          value={isWishlisted}
-          id={product.id}
-          onChange={() => setIsWishlisted(!isWishlisted)}
-        />
-        {isWishlisted ? <GoHeart /> : <GoHeartFill />}
-      </label>
+    <div className="card relative  w-max rounded-md p-2 border-gray-200 hover:shadow-md transition-all duration-150   border   ">
+      <AddToWishlist product={product} />
       <Link to={`/product/${product.id}`}>
         <div
           className="product-image flex justify-center"

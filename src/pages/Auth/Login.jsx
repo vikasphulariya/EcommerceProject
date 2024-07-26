@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginWithFirebase } from "../../app/firebase/login";
 import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 function Login() {
   const navigate = useNavigate();
@@ -57,6 +58,7 @@ function Login() {
             Nice to see you again
           </p>
           <form
+          aria-disabled={loading}
             onSubmit={loginUser}
             className="w-full flex flex-col gap-3 px-7"
           >
@@ -91,11 +93,12 @@ function Login() {
                 Forget Password?
               </button>
             </div>
-            <input
-              type="submit"
-              value={loading ? "Loading" : "Login In"}
-              className="bg-blue-500 text-white rounded-md p-2"
-            />
+            <label htmlFor="submit">
+              <input type="submit" id="submit" className="sr-only" />
+              <button className="bg-blue-500 text-white font-semibold hover:bg-blue-600 hover:shadow-md transition-all rounded-md p-2 w-full">
+                {loading ? <ClipLoader size={20} /> : "Login"}
+              </button>
+            </label>
           </form>
 
           <div className="goto-register flex py-3 gap-2">

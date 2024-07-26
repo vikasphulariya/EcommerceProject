@@ -19,19 +19,25 @@ import { useDispatch } from "react-redux";
 import { removeUser, setUser } from "./app/store/userSlice.js";
 import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
-import { loadCartFromCloud } from "./app/firebase/manageCart.js";
 import { loadCartFromCloudAsync } from "./app/store/cartSlice.js";
+import ProductPage from "./pages/ProductPage/ProductPage.jsx";
+import { loadwishlistFromCloudAsync } from "./app/store/wishlistSlice.js";
+import Profile from "./pages/profile/Profile.jsx";
+import ProtectedPage from "./pages/protectedPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
-    <Route
-      key={""}
-      path="/"
-      errorElement={<NoPage />}
-      element={<PageLayout />}
-    >
+    <Route key={""} path="/" errorElement={<NoPage />} element={<PageLayout />}>
       <Route path="/" element={<Home />} />
-      <Route path="/" element={<Home />} />
+      <Route path="/product/:productID" element={<ProductPage />} />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedPage>
+            <Profile />
+          </ProtectedPage>
+        }
+      />
     </Route>,
     <Route key="s" path="/" element={<AuthLayout />}>
       <Route
@@ -67,6 +73,7 @@ function App() {
     if (user && user.emailVerified) {
       dispatch(setUser(user));
       dispatch(loadCartFromCloudAsync());
+      dispatch(loadwishlistFromCloudAsync());
     } else {
       dispatch(removeUser());
     }
@@ -91,7 +98,7 @@ function App() {
 
       <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={1500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
