@@ -24,6 +24,8 @@ import ProductPage from "./pages/ProductPage/ProductPage.jsx";
 import { loadwishlistFromCloudAsync } from "./app/store/wishlistSlice.js";
 import Profile from "./pages/profile/Profile.jsx";
 import ProtectedPage from "./pages/protectedPage.jsx";
+import { auth, db } from "./app/firebase/firebase.js";
+import { doc, onSnapshot } from "firebase/firestore";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
@@ -68,18 +70,27 @@ function App() {
   }, []);
 
   const getDataFromLocal = async () => {
-    const data = localStorage.getItem("User");
-    const user = JSON.parse(data);
-    if (user && user.emailVerified) {
-      dispatch(setUser(user));
+    auth.onAuthStateChanged(async (user) => {
+      // console.log(user.emailVerified);
+      if (user && user.emailVerified) {
+        await loadUserDataFromCloudAsync(user);
+      } else {
+        dispatch(removeUser());
+      }
+      setTimeout(() => {
+        setLoading(false);
+      }, 100);
+    });
+  };
+
+  const loadUserDataFromCloudAsync = async (user) => {
+    const userDocRef = doc(db, "users", user.uid);
+    await onSnapshot(userDocRef, (doc) => {
+      console.log(doc.data());
+      dispatch(setUser({ ...doc.data(), email: user.email }));
       dispatch(loadCartFromCloudAsync());
       dispatch(loadwishlistFromCloudAsync());
-    } else {
-      dispatch(removeUser());
-    }
-    setTimeout(() => {
-      setLoading(false);
-    }, 400);
+    });
   };
 
   if (loading) {

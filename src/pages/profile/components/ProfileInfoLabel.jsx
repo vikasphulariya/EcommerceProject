@@ -1,10 +1,33 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { BiEdit } from "react-icons/bi";
-import { Button, Input, Modal, Placeholder } from "rsuite";
+import { Button, Modal } from "rsuite";
+import {
+  updateEmailOfUser,
+  updatePassOfUser,
+  updateUserInfo,
+} from "../../../app/firebase/userMange";
 
 function ProfileInfoLabel({ title, value, property }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [valueToEdit, setValueToEdit] = useState(value);
+  const intialValue = value;
+  const updateInfo = async () => {
+    let response;
+    if (property === "email") {
+      response = await updateEmailOfUser(valueToEdit);
+    } else if (property === "password") {
+
+      response = await updatePassOfUser(valueToEdit);
+    } else {
+      response = await updateUserInfo(property, valueToEdit);
+    }
+  
+    if (response === "true") {
+      handleClose();
+    }
+  };
+
   const handleClose = () => {
     setIsModalOpen(false);
   };
@@ -29,12 +52,23 @@ function ProfileInfoLabel({ title, value, property }) {
           <h1 className="text-lg font-semibold text-gray-600">{title}</h1>
 
           <input
-            value={value}
-            className=" bg-gray-400 px-2 py-1  outline-none  border focus:border-black  rounded-md flex justify-between item-center flex-grow text-ellipsis  "
+            value={valueToEdit}
+            onChange={(e) => setValueToEdit(e.target.value)}
+            className=" bg-gray-400 px-2 py-1 mb-2  outline-none  border focus:border-black  rounded-md flex justify-between item-center flex-grow text-ellipsis  "
           />
+          {(property === "email" || property === "password") && (
+            <span className=" text-gray-400">
+              To update your {property} you must be signed in recently. For
+              security reasons.
+            </span>
+          )}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleClose} appearance="primary">
+          <Button
+            disabled={intialValue === valueToEdit}
+            onClick={updateInfo}
+            appearance="primary"
+          >
             Update
           </Button>
           <Button onClick={handleClose} appearance="subtle">

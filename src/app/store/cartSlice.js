@@ -57,7 +57,7 @@ export const loadCartFromCloudAsync = createAsyncThunk(
     const state = thunkAPI.getState();
     console.log(state);
     const userUID = state.user.user.uid;
-    console.log("Dd");
+    console.log(userUID);
     try {
       const response = await loadCartFromCloud(userUID);
       return response; // Return the cart products array
