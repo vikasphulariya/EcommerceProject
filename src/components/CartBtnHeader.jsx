@@ -1,13 +1,13 @@
-import React from "react";
-import { BiBasket, BiCircle } from "react-icons/bi";
+import { BiBasket } from "react-icons/bi";
 import { useSelector } from "react-redux";
-import { CustomProvider, Dropdown, IconButton } from "rsuite";
+import { CustomProvider, Dropdown } from "rsuite";
 import emptyCartAnimation from "../assets/emptyCartAnimation.json";
 import Lottie from "react-lottie-player";
 import CartProductCard from "./CartProductCard";
+import { useNavigate } from "react-router";
 function CartBtnHeader() {
   const productsFromCart = useSelector((state) => state.cart.products);
-
+  const navigate = useNavigate();
   const cartBtnLogo = (props, ref) => (
     <button {...props} ref={ref} className="  h-full mt-2 text-3xl">
       <BiBasket />
@@ -31,10 +31,18 @@ function CartBtnHeader() {
           renderToggle={cartBtnLogo}
         >
           {productsFromCart.length > 0 ? (
-            <div className="py-2 flex flex-col  ">
+            <div className="pt-2 flex flex-col  ">
               {productsFromCart.map((item, index) => {
-                return <CartProductCard key={index} product={item} from="cart" />;
+                return (
+                  <CartProductCard key={index} product={item} from="cart" />
+                );
               })}
+              <Dropdown.Separator />
+              <button onClick={()=>{
+                navigate("/cart")
+              }} className=" bg-orange-300 rounded-md py-1 mx-1 text-xl hover:bg-orange-500 text-blue-600 hover:text-blue-800 font-semibold">
+                View Cart
+              </button>
             </div>
           ) : (
             <div className=" p-2 flex justify-center flex-col items-center gap-2">

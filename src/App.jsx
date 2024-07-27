@@ -26,6 +26,7 @@ import Profile from "./pages/profile/Profile.jsx";
 import ProtectedPage from "./pages/protectedPage.jsx";
 import { auth, db } from "./app/firebase/firebase.js";
 import { doc, onSnapshot } from "firebase/firestore";
+import Wishlist from "./pages/wishlist/Wishlist.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
@@ -37,6 +38,14 @@ const router = createBrowserRouter(
         element={
           <ProtectedPage>
             <Profile />
+          </ProtectedPage>
+        }
+      />
+      <Route
+        path="/wishlist"
+        element={
+          <ProtectedPage>
+            <Wishlist />
           </ProtectedPage>
         }
       />

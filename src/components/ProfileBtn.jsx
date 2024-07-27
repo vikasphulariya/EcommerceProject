@@ -16,6 +16,7 @@ import { clearWishlist } from "../app/store/wishlistSlice";
 function ProfileBtn() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const wishListPrdoucts = useSelector((state) => state.wishlist.products);
   const naviagte = useNavigate();
   const logout = async () => {
     await auth.signOut().then(() => {
@@ -54,8 +55,14 @@ function ProfileBtn() {
             >
               <Link to="/profile"> Profile</Link>
             </Dropdown.Item>
-            <Dropdown.Item eventKey="1" icon={<GoHeartFill color="red" />}>
-              <Link to="/profile">WishList</Link>
+            <Dropdown.Item
+              onClick={() => {
+                naviagte("/wishlist");
+              }}
+              eventKey="1"
+              icon={<GoHeartFill color="red" />}
+            >
+              <Link to="/wishlist">WishList ({wishListPrdoucts.length})</Link>
             </Dropdown.Item>
             <Dropdown.Item eventKey="1" icon={<LiaShippingFastSolid />}>
               <Link to="/profile">Orders</Link>
