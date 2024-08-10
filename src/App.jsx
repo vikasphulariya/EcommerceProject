@@ -28,12 +28,15 @@ import { auth, db } from "./app/firebase/firebase.js";
 import { doc, onSnapshot } from "firebase/firestore";
 import Wishlist from "./pages/wishlist/Wishlist.jsx";
 import Cart from "./pages/cart/Cart.jsx";
+import AboutUs from "./pages/About/AboutUs.jsx";
+import CategoryPage from "./pages/categoryPage/CategoryPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
     <Route key={""} path="/" errorElement={<NoPage />} element={<PageLayout />}>
       <Route path="/" element={<Home />} />
       <Route path="/product/:productID" element={<ProductPage />} />
+      <Route path="/categories/:categoryName" element={<CategoryPage />} />
       <Route
         path="/profile"
         element={
@@ -76,6 +79,7 @@ const router = createBrowserRouter(
           </UserAuthenticated>
         }
       />
+      <Route path="/about-us" element={<AboutUs />} />
     </Route>,
   ])
 );

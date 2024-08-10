@@ -55,14 +55,14 @@ function Header() {
                   Contact Us
                 </NavLink>
                 <NavLink
-                  to="/faq"
+                  to="/about-us"
                   className={({ isActive }) =>
                     `text-black ${
                       isActive ? "text-blue-600" : ""
                     } hover:text-blue-500 transistion duration-300`
                   }
                 >
-                  FAQ
+                  About Us
                 </NavLink>
               </ul>
             </div>

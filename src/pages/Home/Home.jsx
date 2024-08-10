@@ -56,7 +56,10 @@ export default function Home() {
         })}
       </div>
       <ProductsOnSaleSection />
-      <SingleCategoryViewer sectionTtile={"Cameras"} />
+      <SingleCategoryViewer sectionTtile={"Mobiles"} category={"Mobiles"} />
+      <SingleCategoryViewer sectionTtile={"Computers"} category={"computers"} />
+      <SingleCategoryViewer sectionTtile={"Printers"} category={"Printer"} />
+      <SingleCategoryViewer sectionTtile={"TV's"} category={"Tv"} />
     </div>
   );
 }
