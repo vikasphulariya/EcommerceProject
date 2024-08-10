@@ -3,7 +3,11 @@ import logo from "../assets/logo.png";
 import { BiBasket, BiSearch } from "react-icons/bi";
 import ProfileBtn from "./ProfileBtn";
 import CartBtnHeader from "./CartBtnHeader";
+import { useState } from "react";
+import { CgClose } from "react-icons/cg";
+import SearchBtn from "./SearchBtn";
 function Header() {
+  const [searchActive, setSearchActive] = useState(false);
   return (
     <div>
       <nav>
@@ -17,55 +21,57 @@ function Header() {
               <span className=" text-nowrap">Noobie Store</span>
             </Link>
           </div>
-          <div className="header-links text-xl hidden md:flex">
-            <ul className=" flex gap-10">
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  `text-black ${
-                    isActive ? "text-blue-600" : ""
-                  } hover:text-blue-500 transistion duration-300`
-                }
-              >
-                Home
-              </NavLink>
-              <NavLink
-                to="/products"
-                className={({ isActive }) =>
-                  `text-black ${
-                    isActive ? "text-blue-600" : ""
-                  } hover:text-blue-500 transistion duration-300`
-                }
-              >
-                Products
-              </NavLink>
-              <NavLink
-                to="/contact"
-                className={({ isActive }) =>
-                  `text-black ${
-                    isActive ? "text-blue-600" : ""
-                  } hover:text-blue-500 transistion duration-300`
-                }
-              >
-                Contact Us
-              </NavLink>
-              <NavLink
-                to="/faq"
-                className={({ isActive }) =>
-                  `text-black ${
-                    isActive ? "text-blue-600" : ""
-                  } hover:text-blue-500 transistion duration-300`
-                }
-              >
-                FAQ
-              </NavLink>
-            </ul>
-          </div>
+          {searchActive ? null : (
+            <div className="header-links text-xl hidden md:flex">
+              <ul className=" flex gap-10">
+                <NavLink
+                  to="/"
+                  className={({ isActive }) =>
+                    `text-black ${
+                      isActive ? "text-blue-600" : ""
+                    } hover:text-blue-500 transistion duration-300`
+                  }
+                >
+                  Home
+                </NavLink>
+                <NavLink
+                  to="/products"
+                  className={({ isActive }) =>
+                    `text-black ${
+                      isActive ? "text-blue-600" : ""
+                    } hover:text-blue-500 transistion duration-300`
+                  }
+                >
+                  Products
+                </NavLink>
+                <NavLink
+                  to="/contact"
+                  className={({ isActive }) =>
+                    `text-black ${
+                      isActive ? "text-blue-600" : ""
+                    } hover:text-blue-500 transistion duration-300`
+                  }
+                >
+                  Contact Us
+                </NavLink>
+                <NavLink
+                  to="/faq"
+                  className={({ isActive }) =>
+                    `text-black ${
+                      isActive ? "text-blue-600" : ""
+                    } hover:text-blue-500 transistion duration-300`
+                  }
+                >
+                  FAQ
+                </NavLink>
+              </ul>
+            </div>
+          )}
           <div className="header-btns flex text-2xl gap-3 items-center">
-            <button>
-              <BiSearch />
-            </button>
-
+            <SearchBtn
+              setSearchActive={setSearchActive}
+              searchActive={searchActive}
+            />
             <CartBtnHeader />
             <ProfileBtn />
           </div>

@@ -11,7 +11,7 @@ export const updateUserInfo = async (name, value) => {
 
     const userDocRef = doc(db, "users", uid);
     await updateDoc(userDocRef, { [name]: value });
-    toast(`Successfull updated ${name}.`);
+    toast(`Successfully updated ${name}.`);
     return "true";
   } catch (error) {
     toast(error.message);

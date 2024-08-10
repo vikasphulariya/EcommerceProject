@@ -67,7 +67,9 @@ function ProfileBtn() {
             <Dropdown.Item eventKey="1" icon={<LiaShippingFastSolid />}>
               <Link to="/profile">Orders</Link>
             </Dropdown.Item>
-            <Dropdown.Item eventKey="1" icon={<BsCart3 />}>
+            <Dropdown.Item eventKey="1" onClick={()=>{
+              naviagte("/cart")
+            }} icon={<BsCart3 />}>
               <Link to="/profile">Cart</Link>
             </Dropdown.Item>
             <Dropdown.Separator />

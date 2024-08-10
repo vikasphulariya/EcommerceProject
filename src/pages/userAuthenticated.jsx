@@ -10,14 +10,14 @@ function UserAuthenticated({ children }) {
   const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
-    if (user && user.emailVerified) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (user && user.emailVerified) {
         navigate("/", { replace: true });
-      }, 300);
-    } else {
-      setLoading(false);
-    }
-  }, []);
+      } else {
+        setLoading(false);
+      }
+    }, 300);
+  }, [user]);
 
   if (loading) {
     return (

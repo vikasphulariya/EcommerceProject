@@ -17,6 +17,7 @@ const ProductLoader = () => (
 );
 
 const ProductInfo = ({ product }) => {
+  console.log(product);
   const discountPercentage =
     100 - (product.discountPrice / product.price) * 100;
 

@@ -24,6 +24,7 @@ function CartBtnHeader() {
         <Dropdown
           placement="bottomEnd"
           noCaret
+          ac
           menuStyle={{
             width: "15rem",
             marginTop: 5,
@@ -40,6 +41,7 @@ function CartBtnHeader() {
               <Dropdown.Separator />
               <button onClick={()=>{
                 navigate("/cart")
+                
               }} className=" bg-orange-300 rounded-md py-1 mx-1 text-xl hover:bg-orange-500 text-blue-600 hover:text-blue-800 font-semibold">
                 View Cart
               </button>

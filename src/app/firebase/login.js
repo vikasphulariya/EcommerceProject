@@ -6,6 +6,7 @@ import { store } from "../store/store";
 import { doc, getDoc } from "firebase/firestore";
 import { loadCartFromCloudAsync } from "../store/cartSlice";
 import { loadwishlistFromCloudAsync } from "../store/wishlistSlice";
+import { updateUserInfo } from "./userMange";
 
 export const loginWithFirebase = async (email, password) => {
   try {
@@ -18,8 +19,10 @@ export const loginWithFirebase = async (email, password) => {
       }
 
       let userInfoSnap = await getDoc(doc(db, "users", result.user.uid));
+
       if (userInfoSnap.exists()) {
         let userInfo = userInfoSnap.data();
+        updateUserInfo("emailVerified",true)
         store.dispatch(
           setUser({ ...userInfo, emailVerified: result.user.emailVerified })
         );
