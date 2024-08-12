@@ -35,7 +35,7 @@ function Header() {
                   Home
                 </NavLink>
                 <NavLink
-                  to="/products"
+                  to="/categories/all"
                   className={({ isActive }) =>
                     `text-black ${
                       isActive ? "text-blue-600" : ""
@@ -45,7 +45,7 @@ function Header() {
                   Products
                 </NavLink>
                 <NavLink
-                  to="/contact"
+                  to="/contact-us"
                   className={({ isActive }) =>
                     `text-black ${
                       isActive ? "text-blue-600" : ""

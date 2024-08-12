@@ -30,6 +30,7 @@ import Wishlist from "./pages/wishlist/Wishlist.jsx";
 import Cart from "./pages/cart/Cart.jsx";
 import AboutUs from "./pages/About/AboutUs.jsx";
 import CategoryPage from "./pages/categoryPage/CategoryPage.jsx";
+import ContactUs from "./pages/contactUs/ContactUs.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
@@ -61,6 +62,7 @@ const router = createBrowserRouter(
           </ProtectedPage>
         }
       />
+      <Route path="/contact-us" element={<ContactUs />} />
     </Route>,
     <Route key="s" path="/" element={<AuthLayout />}>
       <Route

@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
 import AddToCartBtn from "./AddToCartBtn";
 import AddToWishlist from "./AddToWishlist";
 
-function ProductCard({ product }) {
+function ProductCardRes({ product }) {
   return (
-    <div className="card relative bg-white max-w-80   rounded-md p-2 border-gray-200 hover:shadow-md transition-all duration-150   border   ">
+    <div className="card relative bg-white   rounded-md p-2 border-gray-200 hover:shadow-md transition-all duration-150   border   ">
       <AddToWishlist product={product} />
       <Link to={`/product/${product.id}`}>
         <div
@@ -51,5 +51,5 @@ function ProductCard({ product }) {
   );
 }
 
-export default ProductCard;
+export default ProductCardRes;
 

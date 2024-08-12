@@ -10,12 +10,21 @@ import {
 import ProductCard from "../../components/ProductCard";
 import { ClipLoader } from "react-spinners";
 import noProduct from "../../assets/noProduct.jpg";
+import { db } from "../../app/firebase/firebase";
+import ProductCardRes from "../../components/ProductCard copy";
 function CategoryPage() {
   const categoryName = useParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    getProductsByCategory(categoryName.categoryName);
+    if (
+      typeof categoryName.categoryName === "string" &&
+      categoryName.categoryName.toLowerCase() === "all"
+    ) {
+      getAllProducts();
+    } else {
+      getProductsByCategory(categoryName.categoryName);
+    }
   }, [categoryName]);
 
   async function getProductsByCategory(category) {
@@ -35,21 +44,49 @@ function CategoryPage() {
     }, 50);
   }
 
-  // Example usage:
+  const getAllProducts = async () => {
+    const data = await getDocs(collection(db, "products"));
+    const products = data.docs.map((doc) => doc.data());
+    setProducts(products);
+    setLoading(false);
+  };
 
+  if (loading) {
+    return (
+      <div className="  w-full grid place-items-center">
+        <ClipLoader color="#36d7b7" size={50} />
+      </div>
+    );
+  } else if (categoryName === undefined) return <></>;
+  else if (categoryName.categoryName === "all") {
+    return (
+      <div
+        className="category-page grid max-w-screen-2xl "
+        style={{
+          gridTemplateColumns: "repeat(auto-fill, minmax(200px,1fr))",
+          gap: "10px",
+        }}
+      >
+        {products.map((product) => {
+          return (
+            <ProductCardRes
+              product={product}
+              key={product.id}
+              className="product-card"
+            ></ProductCardRes>
+          );
+        })}
+      </div>
+    );
+  }
   return (
     <div className="min-h-[30rem] ">
       <h1 className="text-3xl font-bold text-center my-3">
-        {categoryName.categoryName}
+        {categoryName.categoryName === "all"
+          ? "All Products"
+          : categoryName.categoryName}
       </h1>
-      {loading ? (
-        <div className="w-full min-h-[30rem]  grid place-items-center">
-          <div>
-            <ClipLoader size={70} />
-            <p>Loading</p>
-          </div>
-        </div>
-      ) : products.length ? (
+      {products.length ? (
         <>
           <div className=" flex gap-2 flex-wrap">
             {products.map((item) => {
@@ -59,7 +96,11 @@ function CategoryPage() {
         </>
       ) : (
         <div className=" flex justify-center bg-[#EBEFF2]">
-          <img src={noProduct} alt="" className=" max-h-[30rem] object-contain " />
+          <img
+            src={noProduct}
+            alt=""
+            className=" max-h-[30rem] object-contain "
+          />
         </div>
       )}
     </div>
