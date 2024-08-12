@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import {
   getFirestore,
@@ -58,27 +58,7 @@ function CategoryPage() {
       </div>
     );
   } else if (categoryName === undefined) return <></>;
-  else if (categoryName.categoryName === "all") {
-    return (
-      <div
-        className="category-page grid max-w-screen-2xl "
-        style={{
-          gridTemplateColumns: "repeat(auto-fill, minmax(200px,1fr))",
-          gap: "10px",
-        }}
-      >
-        {products.map((product) => {
-          return (
-            <ProductCardRes
-              product={product}
-              key={product.id}
-              className="product-card"
-            ></ProductCardRes>
-          );
-        })}
-      </div>
-    );
-  }
+
   return (
     <div className="min-h-[30rem] ">
       <h1 className="text-3xl font-bold text-center my-3">
@@ -88,11 +68,23 @@ function CategoryPage() {
       </h1>
       {products.length ? (
         <>
-          <div className=" flex gap-2 flex-wrap">
-            {products.map((item) => {
-              return <ProductCard key={item.id} product={item} />;
-            })}
-          </div>
+                <div
+        className="category-page grid max-w-screen-2xl "
+        style={{
+          gridTemplateColumns: "repeat(auto-fill, minmax(200px,1fr))",
+          gap: "10px",
+        }}
+      >
+        {products.map((product) => {
+          return (
+            <ProductCard
+              product={product}
+              key={product.id}
+              className="product-card"
+            ></ProductCard>
+          );
+        })}
+      </div>
         </>
       ) : (
         <div className=" flex justify-center bg-[#EBEFF2]">

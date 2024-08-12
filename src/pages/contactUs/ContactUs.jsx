@@ -14,9 +14,34 @@ const ContactTile = ({ Icon, title, data }) => {
 };
 
 function ContactUs() {
-  const submitForm = (e) => {
-    e.preventDefault();
-    alert("Form submitted successfully");
+  const [result, setResult] = React.useState("");
+
+  const submitForm = async (event) => {
+    event.preventDefault();
+    setResult("Sending....");
+    const formData = new FormData(event.target);
+
+    formData.append("access_key", "d3b8b90e-c304-4a9d-82c3-11ac7fe2ee68");
+
+    formData.append(
+      "subject",
+      `New Contact Query from NoobStore by ${formData.get("name")}`
+    );
+
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: formData, 
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      setResult("Form Submitted Successfully");
+      event.target.reset();
+    } else {
+      console.log("Error", data);
+      setResult(data.message);
+    }
   };
   return (
     <div className="mx-auto self-center max-w-screen-lg p-4">
@@ -74,8 +99,7 @@ function ContactUs() {
               />
             </label>
             <button
-              onClick={submitForm}
-              onSubmit={submitForm}
+              type="submit"
               className=" self-end bg-blue-400 px-3 py-1 rounded-md hover:shadow-md hover:bg-blue-500 font-semibold text-xl"
             >
               Submit
