@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { db } from "../../app/firebase/firebase";
 import {
   collection,
@@ -26,6 +26,7 @@ export default function Messages() {
   const [loadingChats, setLoadingChats] = useState(true);
   const [otherUserData, setOtherUserData] = useState(null);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const messagesEndRef = useRef(null);
   const scrollContainerRef = useRef(null);
@@ -193,14 +194,9 @@ export default function Messages() {
                       {other.name?.[0] || "?"}
                     </div>
                     <div className="flex-grow overflow-hidden">
-                      <div className="flex justify-between items-start">
-                        <h3 className="font-bold text-gray-900 truncate">
-                          {other.name}
-                        </h3>
-                      </div>
-                      <p className="text-sm text-gray-500 truncate mt-0.5">
-                        {chat.lastMessage || "Click to view conversation"}
-                      </p>
+                      <h3 className="font-bold text-gray-900 truncate">
+                        {other.name}
+                      </h3>
                     </div>
                   </div>
                 );
@@ -214,7 +210,7 @@ export default function Messages() {
           {activeChat ? (
             <>
               {/* Chat Header */}
-              <div className="px-4 md:px-6 h-[72px] border-b border-gray-200 flex items-center justify-between bg-white shadow-sm shrink-0">
+              <div className="px-4 md:px-6 py-3 md:py-0 md:h-[72px] border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3 bg-white shadow-sm shrink-0">
                 <div className="flex items-center gap-2 md:gap-3">
                   <button 
                     onClick={() => setActiveChat(null)} 
@@ -222,24 +218,30 @@ export default function Messages() {
                   >
                     <BiArrowBack className="text-xl" />
                   </button>
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700 rounded-full flex items-center justify-center font-bold border border-blue-50 shrink-0">
-                    {otherUserData?.name?.[0] || otherParticipant.name?.[0] || "?"}
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold text-gray-900 leading-tight">
-                      {otherUserData?.name || otherParticipant.name}
-                    </h2>
-                    {otherUserData?.isPublicContact && (
-                      <div className="flex gap-3 mt-0.5">
-                        <p className="text-xs text-blue-600 font-medium">{otherUserData.email}</p>
-                        <p className="text-xs text-gray-500 font-medium">{otherUserData.mobile}</p>
-                      </div>
-                    )}
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => otherUserData?.uid && navigate(`/user/${otherUserData.uid}`)}
+                    className="flex items-center gap-2 md:gap-3 text-left"
+                  >
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700 rounded-full flex items-center justify-center font-bold border border-blue-50 shrink-0">
+                      {otherUserData?.name?.[0] || otherParticipant.name?.[0] || "?"}
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold text-gray-900 leading-tight">
+                        {otherUserData?.name || otherParticipant.name}
+                      </h2>
+                      {otherUserData?.isPublicContact && (
+                        <div className="flex gap-3 mt-0.5">
+                          <p className="text-xs text-blue-600 font-medium">{otherUserData.email}</p>
+                          <p className="text-xs text-gray-500 font-medium">{otherUserData.mobile}</p>
+                        </div>
+                      )}
+                    </div>
+                  </button>
                 </div>
 
                 {otherUserData?.isPublicContact && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 md:gap-3">
                     <a 
                       href={`mailto:${otherUserData.email}`}
                       className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all"

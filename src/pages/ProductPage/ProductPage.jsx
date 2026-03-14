@@ -22,24 +22,30 @@ const ProductLoader = () => (
 );
 
 const ProductInfo = ({ product }) => {
+  const currentUser = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
+  const isOwner = currentUser && currentUser.uid === product.sellerId;
   const [sellerData, setSellerData] = useState(null);
   useEffect(() => {
+    if (!product.sellerId || isOwner) return;
     const fetchSeller = async () => {
       const docRef = doc(db, "users", product.sellerId);
       const snap = await getDoc(docRef);
       if (snap.exists()) setSellerData(snap.data());
     };
     fetchSeller();
-  }, [product.sellerId]);
+  }, [product.sellerId, isOwner]);
 
   return (
     <div className="flex flex-col md:flex-row gap-8 lg:gap-12 bg-white rounded-2xl p-4 md:p-8 shadow-sm border border-gray-100">
       {/* Left: Image Showcase */}
       <div className="w-full md:w-1/2 lg:w-3/5 flex justify-center items-center bg-gray-50 rounded-2xl p-6 relative min-h-[300px] md:min-h-[400px]">
-        {/* Wishlist Button Overlay */}
+      {/* Wishlist Button Overlay */}
+      {!isOwner && (
         <div className="absolute top-4 right-4 z-20">
           <AddToWishlist product={product} />
         </div>
+      )}
         <img
           src={product.imgUrl || "https://placehold.co/800x600"}
           alt={product.name}
@@ -65,8 +71,15 @@ const ProductInfo = ({ product }) => {
         </h1>
 
         {/* Price */}
-        <div className="text-4xl font-black text-blue-600 mb-6">
-          ₹{product.price}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="text-4xl font-black text-blue-600">
+            ₹{product.price}
+          </div>
+          {isOwner && (
+            <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-widest border border-emerald-100">
+              Your listing
+            </span>
+          )}
         </div>
 
         {/* Description */}
@@ -79,19 +92,31 @@ const ProductInfo = ({ product }) => {
           </p>
         </div>
 
-        {/* Seller Info with Integrated Action */}
+        {/* Seller / Owner Info with Integrated Action */}
         <div className="bg-gray-50 border border-gray-100 rounded-[2.5rem] p-6 mb-8 shadow-sm">
           <h3 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] mb-6 block">
-            Seller Details
+            {isOwner ? "Listing Controls" : "Seller Details"}
           </h3>
+
           <div className="flex items-center gap-5">
             <div className="w-14 h-14 bg-gradient-to-br from-blue-100 to-indigo-100 text-blue-700 rounded-full flex items-center justify-center text-xl font-black uppercase shrink-0 shadow-inner">
-              {(sellerData?.name || product.sellerName || "S")[0]}
+              {(isOwner
+                ? (currentUser?.name || currentUser?.displayName || currentUser?.email || "Y")
+                : (sellerData?.name || product.sellerName || "S")
+              )[0]}
             </div>
             <div className="flex-grow">
-              <p className="text-gray-900 font-black text-xl leading-none mb-1">{sellerData?.name || product.sellerName}</p>
-              <p className="text-gray-500 text-sm font-medium">{sellerData?.college || product.sellerCollege}</p>
-              {sellerData?.isPublicContact && (
+              <p className="text-gray-900 font-black text-xl leading-none mb-1">
+                {isOwner
+                  ? (currentUser?.name || currentUser?.displayName || "You")
+                  : (sellerData?.name || product.sellerName || "Campus Seller")}
+              </p>
+              <p className="text-gray-500 text-sm font-medium">
+                {isOwner
+                  ? currentUser?.college || product.sellerCollege
+                  : (sellerData?.college || product.sellerCollege)}
+              </p>
+              {!isOwner && sellerData?.isPublicContact && (
                 <div className="mt-3 pt-3 border-t border-gray-200/60 flex flex-col gap-2">
                   <p className="text-xs font-bold text-blue-600 flex items-center gap-2">
                     <BiEnvelope size={14} />
@@ -105,9 +130,29 @@ const ProductInfo = ({ product }) => {
               )}
             </div>
           </div>
-          
+
+          {/* Actions */}
           <div className="mt-8">
-            <ContactSellerBtn product={product} />
+            {isOwner ? (
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  type="button"
+                  onClick={() => navigate(`/sell?id=${product.id}&type=marketplace`)}
+                  className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-blue-100 hover:shadow-blue-200 transition-all active:scale-95 text-sm uppercase tracking-widest"
+                >
+                  Edit Listing
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate("/messages")}
+                  className="flex-1 flex items-center justify-center gap-2 bg-white text-gray-800 font-bold py-3 px-6 rounded-2xl border border-gray-200 hover:border-blue-300 hover:text-blue-700 transition-all active:scale-95 text-sm uppercase tracking-widest"
+                >
+                  View Enquiries
+                </button>
+              </div>
+            ) : (
+              <ContactSellerBtn product={product} />
+            )}
           </div>
         </div>
       </div>

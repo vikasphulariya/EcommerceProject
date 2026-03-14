@@ -40,6 +40,7 @@ import Deals from "./pages/Home/Deals.jsx";
 import MyListings from "./pages/myListings/MyListings.jsx";
 import StudyMaterial from "./pages/studyMaterial/StudyMaterial.jsx";
 import PublishMaterial from "./pages/studyMaterial/PublishMaterial.jsx";
+import PublicProfile from "./pages/profile/PublicProfile.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
@@ -83,6 +84,7 @@ const router = createBrowserRouter(
           </ProtectedPage>
         }
       />
+      <Route path="/user/:userId" element={<PublicProfile />} />
       <Route
         path="/wishlist"
         element={

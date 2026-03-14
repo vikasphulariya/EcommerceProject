@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { collection, getDocs, query, orderBy, where, or, deleteDoc, doc } from "firebase/firestore";
 import { db, auth } from "../../app/firebase/firebase";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import ProductCard from "../../components/ProductCard";
 import ContactSellerBtn from "../../components/ContactSellerBtn";
 import ActionConfirmModal from "../../components/ActionConfirmModal";
@@ -19,6 +20,7 @@ export default function StudyMaterial() {
   const [searchTerm, setSearchTerm] = useState("");
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [filters, setFilters] = useState({
     campus: "",
@@ -67,13 +69,8 @@ export default function StudyMaterial() {
         items = items.filter(item => item.visibility === "all");
       }
 
-      // Also merge with 'products' that are Books/Notes for backward compatibility
-      const prodRef = collection(db, "products");
-      const qProd = query(prodRef, where("category", "in", ["Books", "Notes"]));
-      const prodSnap = await getDocs(qProd);
-      const prodItems = prodSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-      setMaterials([...items, ...prodItems]);
+      // Only show dedicated study materials (no marketplace products mixed in)
+      setMaterials(items);
     } catch (error) {
       console.error("Error fetching study materials:", error);
     } finally {
@@ -221,11 +218,13 @@ export default function StudyMaterial() {
         {/* Main Content */}
         <main className="flex-grow">
            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-8">
-              {filteredMaterials.map((item) => (
+              {filteredMaterials.map((item) => {
+                const isOwner = item.uploaderId === user?.uid || item.sellerId === user?.uid;
+                return (
                 <div key={item.id} className="group bg-white rounded-[2.5rem] border border-gray-100 p-6 shadow-sm hover:shadow-2xl transition-all relative overflow-hidden flex flex-col h-full">
                   {/* Visibility Badge & Delete for Owner */}
                   <div className="absolute top-4 right-4 z-10 flex gap-2">
-                     {(item.uploaderId === user?.uid || item.sellerId === user?.uid) && (
+                     {isOwner && (
                         <div className="flex gap-2">
                           <button 
                             onClick={() => navigate(`/sell?id=${item.id}&type=${item.isSharedMaterial ? 'study' : 'marketplace'}`)}
@@ -245,7 +244,7 @@ export default function StudyMaterial() {
                       )}
                       
                       {/* Bookmark for Non-Owners */}
-                      {user?.uid && (item.uploaderId !== user.uid && item.sellerId !== user.uid) && (
+                      {user?.uid && !isOwner && (
                          <div className="bg-white/10 backdrop-blur-md rounded-xl">
                             <BookmarkButton material={item} />
                          </div>
@@ -310,7 +309,7 @@ export default function StudyMaterial() {
                         </a>
                      )}
                      
-                     {!item.isAnonymous && (
+                     {!item.isAnonymous && !isOwner && (
                         <ContactSellerBtn 
                           product={item} 
                           label="Contact Publisher"
@@ -319,13 +318,16 @@ export default function StudyMaterial() {
                      )}
 
                      {!item.fileUrl && (
-                        <button className="w-full py-3.5 bg-gray-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-600 transition-colors">
+                        <button
+                          onClick={() => navigate(`/product/${item.id}`)}
+                          className="w-full py-3.5 bg-gray-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-600 transition-colors"
+                        >
                            View Listing
                         </button>
                      )}
                   </div>
                 </div>
-              ))}
+              )})}
            </div>
 
            {filteredMaterials.length === 0 && (

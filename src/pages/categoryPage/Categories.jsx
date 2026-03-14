@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import CategoriesBtn from "../../components/CategoriesBtn";
 import { BiCategoryAlt, BiArrowToRight } from "react-icons/bi";
 
@@ -77,10 +78,12 @@ export default function Categories() {
             <p className="text-blue-100 text-lg opacity-90 max-w-xs font-medium">Textbooks, notes, and lab gear for every major.</p>
           </div>
           <div className="relative z-10">
-            <button className="flex items-center gap-3 bg-white text-blue-600 font-black px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all">
-               <span>View Collection</span>
-               <BiArrowToRight size={20} />
-            </button>
+            <Link to="/categories/Books" className="inline-flex">
+              <button className="flex items-center gap-3 bg-white text-blue-600 font-black px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                <span>View Collection</span>
+                <BiArrowToRight size={20} />
+              </button>
+            </Link>
           </div>
           {/* Decorative shapes */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:scale-125 transition-transform duration-1000"></div>
@@ -94,10 +97,12 @@ export default function Categories() {
             <p className="text-gray-400 text-lg opacity-90 max-w-xs font-medium">Elevate your hostel room and weekend vibes.</p>
           </div>
           <div className="relative z-10">
-            <button className="flex items-center gap-3 bg-blue-600 text-white font-black px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all">
-               <span>Discover More</span>
-               <BiArrowToRight size={20} />
-            </button>
+            <Link to="/deals" className="inline-flex">
+              <button className="flex items-center gap-3 bg-blue-600 text-white font-black px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                <span>Discover More</span>
+                <BiArrowToRight size={20} />
+              </button>
+            </Link>
           </div>
           {/* Decorative shapes */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:scale-125 transition-transform duration-1000"></div>

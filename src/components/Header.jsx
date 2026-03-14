@@ -59,6 +59,7 @@ function Header() {
                 </NavLink>
                 <NavLink
                   to="/categories"
+                  end
                   className={({ isActive }) =>
                     `text-black ${
                       isActive ? "text-blue-600" : ""
@@ -144,7 +145,14 @@ function Header() {
             <nav className="flex flex-col gap-6 text-2xl font-black tracking-tight text-gray-900">
               <NavLink to="/" onClick={() => setMobileMenuOpen(false)} className={({isActive}) => isActive ? "text-blue-600" : "hover:text-blue-600"}>Home</NavLink>
               <NavLink to="/categories/all" onClick={() => setMobileMenuOpen(false)} className={({isActive}) => isActive ? "text-blue-600" : "hover:text-blue-600"}>All Products</NavLink>
-              <NavLink to="/categories" onClick={() => setMobileMenuOpen(false)} className={({isActive}) => isActive ? "text-blue-600" : "hover:text-blue-600"}>Categories</NavLink>
+              <NavLink
+                to="/categories"
+                end
+                onClick={() => setMobileMenuOpen(false)}
+                className={({isActive}) => isActive ? "text-blue-600" : "hover:text-blue-600"}
+              >
+                Categories
+              </NavLink>
               <NavLink to="/deals" onClick={() => setMobileMenuOpen(false)} className={({isActive}) => isActive ? "text-blue-600" : "hover:text-blue-600"}>Campus Deals</NavLink>
               <NavLink to="/study-material" onClick={() => setMobileMenuOpen(false)} className={({isActive}) => isActive ? "text-blue-600" : "hover:text-blue-600"}>Study Material</NavLink>
               <div className="w-full h-1 bg-gray-50 rounded-full my-4"></div>

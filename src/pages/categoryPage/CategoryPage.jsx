@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   collection,
   getDocs,
@@ -13,6 +13,7 @@ import { BiFilterAlt, BiX, BiSliderAlt, BiChevronDown } from "react-icons/bi";
 
 export default function CategoryPage() {
   const { categoryName } = useParams();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +30,12 @@ export default function CategoryPage() {
 
   const updateFilters = (newFilters) => {
     const params = new URLSearchParams(searchParams);
+    let nextCategory = filters.category;
+
     Object.entries(newFilters).forEach(([key, value]) => {
+      if (key === "category") {
+        nextCategory = value || "";
+      }
       if (value) {
         params.set(key, value);
       } else {
@@ -37,6 +43,15 @@ export default function CategoryPage() {
       }
     });
     setSearchParams(params);
+
+    // Sync route with category filter
+    if ("category" in newFilters) {
+      if (!nextCategory || nextCategory.toLowerCase() === "all") {
+        navigate("/categories/all", { replace: true });
+      } else {
+        navigate(`/categories/${nextCategory}`, { replace: true });
+      }
+    }
   };
 
   const CATEGORIES = ["Books", "Lab Tools", "Stationery", "Electronics", "Bicycles", "Hostel Needs"];
@@ -108,7 +123,11 @@ export default function CategoryPage() {
   }, [allProducts, filters]);
 
   const resetFilters = () => {
+    // Clear all search params
     setSearchParams({});
+
+    // Also reset the route to the "all products" view
+    navigate("/categories/all", { replace: true });
   };
 
   if (loading) {
@@ -120,7 +139,13 @@ export default function CategoryPage() {
   }
 
   const FilterSidebar = ({ isMobile = false }) => (
-    <div className={`space-y-8 ${isMobile ? 'p-6' : ''}`}>
+    <div
+      className={`space-y-8 ${
+        isMobile
+          ? "p-6"
+          : "max-h-[calc(100vh-8rem)] overflow-y-auto pr-2 custom-scrollbar"
+      }`}
+    >
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-black text-gray-900 uppercase tracking-wider">Filters</h3>
         <button 
