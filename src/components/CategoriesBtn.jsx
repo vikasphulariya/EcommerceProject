@@ -2,10 +2,10 @@
 
 import { Link } from "react-router-dom";
 
-function CategoriesBtn({ imgAddress, categoryName }) {
+function CategoriesBtn({ imgAddress, categoryName, to }) {
   return (
     <Link
-      to={`/categories/${categoryName}`}
+      to={to || `/categories/${categoryName}`}
       className="flex flex-col items-center gap-3 group cursor-pointer transition-all active:scale-95 min-w-[90px] md:min-w-[110px]"
     >
       <div

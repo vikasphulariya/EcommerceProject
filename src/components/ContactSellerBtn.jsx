@@ -5,77 +5,79 @@ import { db } from "../app/firebase/firebase";
 import { toast } from "react-toastify";
 import { BiMessageSquareDetail } from "react-icons/bi";
 
-function ContactSellerBtn({ product, className = "" }) {
+function ContactSellerBtn({ product, className = "", label }) {
   const user = useSelector((state) => state.user.user);
   const navigate = useNavigate();
 
   const handleContactSeller = async (e) => {
-    // Prevent navigation if the button is inside a Link/Card
+    // Basic mapping for study materials vs products
+    const ownerId = product.sellerId || product.uploaderId;
+    const ownerName = product.sellerName || product.uploaderName;
+    const itemName = product.name || product.title;
+    const itemPrice = product.price || 0;
+
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
 
     if (!user) {
-      toast.info("Please login to contact the seller", { position: "bottom-center" });
+      toast.info("Please login to contact the owner", { position: "bottom-center" });
       navigate("/login");
       return;
     }
 
-    if (user.uid === product.sellerId) {
+    if (user.uid === ownerId) {
       toast.info("This is your own listing!", { position: "bottom-center" });
       return;
     }
 
     try {
-      // Create a toast for loading state
       const loadingToast = toast.loading("Starting conversation...", { position: "bottom-center" });
 
-      const sellerDocRef = doc(db, "users", product.sellerId);
-      const sellerDoc = await getDoc(sellerDocRef);
-      const sellerData = sellerDoc.exists() ? sellerDoc.data() : {};
+      const ownerDocRef = doc(db, "users", ownerId);
+      const ownerDoc = await getDoc(ownerDocRef);
+      const ownerData = ownerDoc.exists() ? ownerDoc.data() : {};
 
       const chatsRef = collection(db, "chats");
-      // Check if a chat already exists between these two users
       const q = query(chatsRef, where("participants", "array-contains", user.uid));
       const querySnapshot = await getDocs(q);
       
       let existingChatId = null;
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        if (data.participants.includes(product.sellerId)) {
+        if (data.participants.includes(ownerId)) {
           existingChatId = doc.id;
         }
       });
 
       if (!existingChatId) {
         const newChat = {
-          participants: [user.uid, product.sellerId],
+          participants: [user.uid, ownerId],
           participantDetails: {
             [user.uid]: { 
-              name: user.displayName || user.name || "Buyer",
+              name: user.displayName || user.name || "User",
               email: user.email || "",
               mobile: user.mobile || "" 
             },
-            [product.sellerId]: { 
-              name: sellerData.name || product.sellerName || "Seller",
-              email: sellerData.email || product.sellerEmail || "",
-              mobile: sellerData.mobile || ""
+            [ownerId]: { 
+              name: ownerData.name || ownerName || "Owner",
+              email: ownerData.email || product.sellerEmail || product.uploaderEmail || "",
+              mobile: ownerData.mobile || ""
             }
           },
-          isPublicContact: sellerData.isPublicContact || false,
+          isPublicContact: ownerData.isPublicContact || false,
           updatedAt: serverTimestamp(),
-          lastMessage: `Interested in: ${product.name}`,
+          lastMessage: `Interested in: ${itemName}`,
           lastMessageBy: user.uid,
-          unreadBy: [product.sellerId]
+          unreadBy: [ownerId]
         };
         const docRef = await addDoc(chatsRef, newChat);
         existingChatId = docRef.id;
 
-        // Add a first automated message or notification
         const messagesRef = collection(db, "chats", existingChatId, "messages");
         await addDoc(messagesRef, {
-            text: `Hi! I'm interested in your listing: "${product.name}" (Price: ₹${product.price}). Is it still available?`,
+            text: `Hi! I'm interested in your resource: "${itemName}". Is it still available?`,
             senderId: user.uid,
             createdAt: serverTimestamp(),
         });
@@ -95,7 +97,7 @@ function ContactSellerBtn({ product, className = "" }) {
       className={`w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-blue-100 hover:shadow-blue-200 transition-all active:scale-95 ${className}`}
     >
       <BiMessageSquareDetail size={20} />
-      <span>Contact Seller</span>
+      <span>{label || "Contact Seller"}</span>
     </button>
   );
 }

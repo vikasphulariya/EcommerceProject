@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { collection, getDocs, query, where, getFirestore, limit, orderBy } from "firebase/firestore";
 import { db } from "../../app/firebase/firebase";
 import ProductCard from "../../components/ProductCard";
@@ -6,6 +7,7 @@ import { ClipLoader } from "react-spinners";
 import { BiSearch } from "react-icons/bi";
 
 export default function Deals() {
+  const navigate = useNavigate();
   const [deals, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,11 +54,11 @@ export default function Deals() {
 
   return (
     <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-8 md:py-12 min-h-screen">
-      <div className="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-[3rem] p-8 md:p-16 text-white mb-12 relative overflow-hidden shadow-2xl">
+      <div className="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-[2rem] md:rounded-[3rem] p-6 md:p-16 text-white mb-8 md:mb-12 relative overflow-hidden shadow-2xl">
         <div className="relative z-10 max-w-2xl">
           <span className="bg-white/20 backdrop-blur-md px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6 inline-block">Flash Sale</span>
-          <h1 className="text-4xl md:text-7xl font-black mb-6 leading-tight tracking-tight">Campus Steals <br/>& Hot Deals</h1>
-          <p className="text-blue-100 text-lg md:text-2xl opacity-90 leading-relaxed font-medium">
+          <h1 className="text-3xl sm:text-4xl md:text-7xl font-black mb-4 md:mb-6 leading-tight tracking-tight">Campus Steals <br/>& Hot Deals</h1>
+          <p className="text-blue-100 text-base md:text-2xl opacity-90 leading-relaxed font-medium">
             The best prices on pre-loved items from your fellow students. Save money, live better on campus.
           </p>
         </div>
@@ -65,7 +67,7 @@ export default function Deals() {
       </div>
 
       {/* Campus Search Section */}
-      <div className="mb-16 bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
+      <div className="mb-10 md:mb-16 bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-sm border border-gray-100">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <h2 className="text-3xl font-black text-gray-900 tracking-tight">Search by Campus</h2>
@@ -89,19 +91,45 @@ export default function Deals() {
         {filteredCampuses.length > 0 ? (
           filteredCampuses.map((campus) => (
             <div key={campus} className="animate-in fade-in slide-in-from-bottom-8 duration-700">
-              <div className="flex items-center gap-6 mb-10">
+              <div className="flex flex-wrap items-center gap-3 md:gap-6 mb-8 md:mb-10">
                 <div className="h-12 w-2 bg-blue-600 rounded-full"></div>
-                <h3 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">{campus}</h3>
-                <span className="text-xs font-black bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full border border-blue-100 uppercase tracking-widest">
+                <h3 className="text-2xl md:text-4xl font-black text-gray-900 tracking-tight">{campus}</h3>
+                <span className="text-xs font-black bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full border border-blue-100 uppercase tracking-widest hidden sm:block">
                   {groupedDeals[campus].length} {groupedDeals[campus].length === 1 ? 'Listing' : 'Listings'}
                 </span>
-                <div className="flex-grow h-px bg-gray-100"></div>
+                <div className="flex-grow h-px bg-gray-100 hidden md:block"></div>
+                <button 
+                  onClick={() => navigate(`/categories/all?campus=${encodeURIComponent(campus)}`)}
+                  className="text-sm font-bold text-blue-600 hover:text-blue-700 underline underline-offset-4 whitespace-nowrap"
+                >
+                  View All
+                </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 transition-all">
-                {groupedDeals[campus].map((product) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8 transition-all">
+                {groupedDeals[campus].slice(0, 4).map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
+                
+                {groupedDeals[campus].length > 4 && (
+                  <div className="flex items-center justify-center p-8 bg-gray-50 rounded-[2.5rem] border-2 border-dashed border-gray-200 group hover:border-blue-400 transition-all cursor-pointer"
+                    onClick={() => navigate(`/categories/all?campus=${encodeURIComponent(campus)}`)}
+                  >
+                    <div className="text-center group-hover:scale-105 transition-transform">
+                      <p className="text-sm font-black text-gray-500 mb-1 group-hover:text-blue-600">+ {groupedDeals[campus].length - 4} More Items</p>
+                      <span className="text-blue-600 font-bold text-xs uppercase tracking-widest">View All Deals</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-8 flex justify-center md:hidden">
+                 <button 
+                  onClick={() => navigate(`/categories/all?campus=${encodeURIComponent(campus)}`)}
+                  className="w-full py-4 bg-gray-900 text-white font-black rounded-2xl shadow-xl active:scale-95 transition-all text-sm uppercase tracking-widest"
+                 >
+                   Browse All {campus} Deals
+                 </button>
               </div>
             </div>
           ))

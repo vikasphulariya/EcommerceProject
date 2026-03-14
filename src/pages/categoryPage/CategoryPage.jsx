@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useParams } from "react-router";
+import { useParams, useSearchParams } from "react-router-dom";
 import {
   collection,
   getDocs,
@@ -13,19 +13,33 @@ import { BiFilterAlt, BiX, BiSliderAlt, BiChevronDown } from "react-icons/bi";
 
 export default function CategoryPage() {
   const { categoryName } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  const [filters, setFilters] = useState({
-    category: categoryName?.toLowerCase() === "all" ? "" : categoryName || "",
-    condition: "",
-    maxPrice: 10000,
-    campus: "",
-    sortBy: "newest"
-  });
+  // Derive filters from URL search params
+  const filters = useMemo(() => ({
+    category: searchParams.get("category") || (categoryName?.toLowerCase() === "all" ? "" : categoryName || ""),
+    condition: searchParams.get("condition") || "",
+    maxPrice: parseInt(searchParams.get("maxPrice")) || 20000,
+    campus: searchParams.get("campus") || "",
+    sortBy: searchParams.get("sortBy") || "newest"
+  }), [searchParams, categoryName]);
 
-  const CATEGORIES = ["Books", "Notes", "Lab Tools", "Stationery", "Electronics", "Bicycles", "Hostel Needs"];
+  const updateFilters = (newFilters) => {
+    const params = new URLSearchParams(searchParams);
+    Object.entries(newFilters).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+    setSearchParams(params);
+  };
+
+  const CATEGORIES = ["Books", "Lab Tools", "Stationery", "Electronics", "Bicycles", "Hostel Needs"];
   const CONDITIONS = ["New", "Like New", "Used - Good", "Used - Fair"];
 
   useEffect(() => {
@@ -33,11 +47,9 @@ export default function CategoryPage() {
   }, []);
 
   useEffect(() => {
-    // Update category filter if URL param changes
-    if (categoryName?.toLowerCase() !== "all" && categoryName) {
-      setFilters(prev => ({ ...prev, category: categoryName }));
-    } else {
-      setFilters(prev => ({ ...prev, category: "" }));
+    // Sync category from URL path to search params if needed
+    if (categoryName?.toLowerCase() !== "all" && categoryName && !searchParams.get("category")) {
+      updateFilters({ category: categoryName });
     }
   }, [categoryName]);
 
@@ -96,13 +108,7 @@ export default function CategoryPage() {
   }, [allProducts, filters]);
 
   const resetFilters = () => {
-    setFilters({
-      category: "",
-      condition: "",
-      maxPrice: 10000,
-      campus: "",
-      sortBy: "newest"
-    });
+    setSearchParams({});
   };
 
   if (loading) {
@@ -127,12 +133,12 @@ export default function CategoryPage() {
 
       {/* Category Filter */}
       <div>
-        <h4 className="text-sm font-bold text-gray-500 mb-4 uppercase tracking-widest">Department</h4>
+        <h4 className="text-sm font-bold text-gray-500 mb-4 uppercase tracking-widest">Categories</h4>
         <div className="flex flex-col gap-2">
           {CATEGORIES.map(cat => (
             <button
               key={cat}
-              onClick={() => setFilters(prev => ({ ...prev, category: prev.category === cat ? "" : cat }))}
+              onClick={() => updateFilters({ category: filters.category === cat ? "" : cat })}
               className={`text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 filters.category === cat 
                 ? "bg-blue-600 text-white shadow-md shadow-blue-200" 
@@ -150,7 +156,7 @@ export default function CategoryPage() {
         <h4 className="text-sm font-bold text-gray-500 mb-4 uppercase tracking-widest">Campus / College</h4>
         <select 
           value={filters.campus}
-          onChange={(e) => setFilters(prev => ({ ...prev, campus: e.target.value }))}
+          onChange={(e) => updateFilters({ campus: e.target.value })}
           className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm font-medium transition-all"
         >
           <option value="">All Campuses</option>
@@ -172,7 +178,7 @@ export default function CategoryPage() {
           max="20000" 
           step="500"
           value={filters.maxPrice}
-          onChange={(e) => setFilters(prev => ({ ...prev, maxPrice: parseInt(e.target.value) }))}
+          onChange={(e) => updateFilters({ maxPrice: e.target.value })}
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
         />
         <div className="flex justify-between mt-2 text-[10px] font-bold text-gray-400">
@@ -188,7 +194,7 @@ export default function CategoryPage() {
           {CONDITIONS.map(cond => (
             <button
               key={cond}
-              onClick={() => setFilters(prev => ({ ...prev, condition: prev.condition === cond ? "" : cond }))}
+              onClick={() => updateFilters({ condition: filters.condition === cond ? "" : cond })}
               className={`px-2 py-2 rounded-xl text-[11px] font-bold transition-all border ${
                 filters.condition === cond 
                 ? "bg-blue-600 text-white border-blue-600 shadow-sm" 
@@ -240,7 +246,7 @@ export default function CategoryPage() {
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-r pr-4 border-gray-100">Sorted By</span>
               <select 
                 value={filters.sortBy}
-                onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value }))}
+                onChange={(e) => updateFilters({ sortBy: e.target.value })}
                 className="bg-transparent text-sm font-bold text-gray-700 outline-none cursor-pointer hover:text-blue-600 transition-colors pl-2"
               >
                 <option value="newest">Newest First</option>
@@ -256,17 +262,17 @@ export default function CategoryPage() {
              <div className="flex flex-wrap gap-2 mb-8">
                 {filters.category && (
                   <span className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-full text-xs font-bold border border-blue-100">
-                    {filters.category} <BiX className="cursor-pointer" onClick={() => setFilters(p => ({...p, category: ""}))} />
+                    {filters.category} <BiX className="cursor-pointer" onClick={() => updateFilters({ category: "" })} />
                   </span>
                 )}
                 {filters.campus && (
                   <span className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-full text-xs font-bold border border-indigo-100">
-                    {filters.campus} <BiX className="cursor-pointer" onClick={() => setFilters(p => ({...p, campus: ""}))} />
+                    {filters.campus} <BiX className="cursor-pointer" onClick={() => updateFilters({ campus: "" })} />
                   </span>
                 )}
                 {filters.condition && (
                    <span className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-xs font-bold border border-emerald-100">
-                    {filters.condition} <BiX className="cursor-pointer" onClick={() => setFilters(p => ({...p, condition: ""}))} />
+                    {filters.condition} <BiX className="cursor-pointer" onClick={() => updateFilters({ condition: "" })} />
                   </span>
                 )}
              </div>

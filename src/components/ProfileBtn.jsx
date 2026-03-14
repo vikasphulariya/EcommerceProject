@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { BiUser, BiLogOut, BiHeart, BiStore, BiChevronDown, BiPlus } from "react-icons/bi";
+import { BiUser, BiLogOut, BiHeart, BiStore, BiChevronDown, BiPlus, BiBookOpen } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../app/store/userSlice";
@@ -139,12 +139,23 @@ function ProfileBtn() {
             <Link
               to="/my-listings"
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-all group"
+              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-gray-700 hover:bg-slate-50 hover:text-slate-600 transition-all group"
             >
-              <div className="p-2 bg-gray-100 rounded-xl group-hover:bg-indigo-100 transition-colors">
+              <div className="p-2 bg-gray-100 rounded-xl group-hover:bg-slate-100 transition-colors">
                 <BiStore size={18} />
               </div>
               <span>My Listings</span>
+            </Link>
+
+            <Link
+              to="/publish-material"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-all group"
+            >
+              <div className="p-2 bg-gray-100 rounded-xl group-hover:bg-indigo-100 transition-colors">
+                <BiBookOpen size={18} />
+              </div>
+              <span>Publish Study Material</span>
             </Link>
           </div>
 

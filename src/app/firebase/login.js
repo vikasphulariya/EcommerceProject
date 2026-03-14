@@ -1,5 +1,5 @@
 // loginWithFirebase.js
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { setUser, removeUser } from "../store/userSlice";
 import { store } from "../store/store";
@@ -8,8 +8,14 @@ import { loadCartFromCloudAsync } from "../store/cartSlice";
 import { loadwishlistFromCloudAsync } from "../store/wishlistSlice";
 import { updateUserInfo } from "./userMange";
 
-export const loginWithFirebase = async (email, password) => {
+export const loginWithFirebase = async (email, password, rememberMe = false) => {
   try {
+    // Set persistence based on the rememberMe flag
+    // SESSION: clears when the tab/browser is closed
+    // LOCAL: survives browser restarts (the default)
+    const persistence = rememberMe ? browserLocalPersistence : browserSessionPersistence;
+    await setPersistence(auth, persistence);
+
     const result = await signInWithEmailAndPassword(auth, email, password);
     if (result) {
       if (!result.user.emailVerified) {

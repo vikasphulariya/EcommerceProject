@@ -29,7 +29,7 @@ function ProductsOnSaleSection() {
   if (loading) return null;
 
   return (
-    <div className="bg-blue-700 w-full py-5 rounded-lg gap-2 px-2 min-[450px]:gap-3 min-[450px]:px-4 flex flex-row shadow-inner">
+    <div className="bg-blue-700 w-full py-4 md:py-5 rounded-lg gap-2 px-2 min-[450px]:gap-3 min-[450px]:px-4 flex flex-row shadow-inner">
       <div className="flex flex-col justify-center items-center w-32 min-[450px]:w-40 md:w-48 shrink-0 px-1 py-4">
         <div className="flex flex-col justify-center items-center text-center">
           <h1 className="text-white text-lg font-bold min-[450px]:text-xl sm:text-2xl md:text-3xl leading-tight">
@@ -42,7 +42,7 @@ function ProductsOnSaleSection() {
           View All
         </button>
       </div>
-      <div className="flex overflow-x-scroll gap-3 no-scrollbar pb-2">
+      <div className="flex overflow-x-auto gap-3 custom-scrollbar pb-4 pt-2 pr-4 flex-grow">
         {products.length > 0 ? (
           products.map((product) => (
             <ProductCard key={product.id} product={product} className="min-w-[220px] max-w-[240px]" />

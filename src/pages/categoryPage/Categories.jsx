@@ -6,37 +6,38 @@ export default function Categories() {
   const CategoryList = [
     {
       name: "Books",
-      image: "https://cdn-icons-png.flaticon.com/512/3145/3145765.png",
+      image: "https://cdn-icons-png.flaticon.com/512/3308/3308336.png",
       color: "bg-orange-50",
     },
     {
-      name: "Notes",
-      image: "https://cdn-icons-png.flaticon.com/512/2965/2965306.png",
+      name: "Study Material",
+      image: "https://cdn-icons-png.flaticon.com/512/4762/4762311.png",
       color: "bg-blue-50",
+      to: "/study-material",
     },
     {
       name: "Lab Tools",
-      image: "https://cdn-icons-png.flaticon.com/512/9334/9334465.png",
+      image: "https://cdn-icons-png.flaticon.com/512/3022/3022607.png",
       color: "bg-emerald-50",
     },
     {
       name: "Stationery",
-      image: "https://cdn-icons-png.flaticon.com/512/1041/1041183.png",
+      image: "https://cdn-icons-png.flaticon.com/512/2641/2641409.png",
       color: "bg-rose-50",
     },
     {
       name: "Electronics",
-      image: "https://cdn-icons-png.flaticon.com/512/186/186239.png",
+      image: "https://cdn-icons-png.flaticon.com/512/3067/3067451.png",
       color: "bg-indigo-50",
     },
     {
       name: "Bicycles",
-      image: "https://cdn-icons-png.flaticon.com/512/121/121966.png",
+      image: "https://cdn-icons-png.flaticon.com/512/3198/3198336.png",
       color: "bg-sky-50",
     },
     {
       name: "Hostel Needs",
-      image: "https://cdn-icons-png.flaticon.com/512/2936/2936886.png",
+      image: "https://cdn-icons-png.flaticon.com/512/3030/3030336.png",
       color: "bg-amber-50",
     },
   ];
@@ -48,7 +49,7 @@ export default function Categories() {
         <div className="w-16 h-16 bg-blue-600 rounded-[1.25rem] flex items-center justify-center text-white shadow-xl shadow-blue-100 mb-6 shrink-0 rotate-3">
            <BiCategoryAlt size={32} />
         </div>
-        <h1 className="text-4xl md:text-7xl font-black text-gray-900 mb-6 tracking-tight">Explore by Department</h1>
+        <h1 className="text-4xl md:text-7xl font-black text-gray-900 mb-6 tracking-tight">Explore Categories</h1>
         <p className="text-gray-500 max-w-2xl mx-auto text-lg md:text-xl font-medium leading-relaxed">
           Find exactly what you need for your campus journey. From academic essentials to weekend gear.
         </p>
@@ -61,6 +62,7 @@ export default function Categories() {
             <CategoriesBtn
               imgAddress={item.image}
               categoryName={item.name}
+              to={item.to}
             />
           </div>
         ))}

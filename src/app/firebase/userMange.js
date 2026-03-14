@@ -1,4 +1,4 @@
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "./firebase";
 import { store } from "../store/store";
 import { updatePassword, verifyBeforeUpdateEmail } from "firebase/auth";
@@ -10,7 +10,7 @@ export const updateUserInfo = async (name, value) => {
     console.log(`Updated ${name} to ${value} for user ${uid}`);
 
     const userDocRef = doc(db, "users", uid);
-    await updateDoc(userDocRef, { [name]: value });
+    await setDoc(userDocRef, { [name]: value }, { merge: true });
     toast(`Successfully updated ${name}.`);
     return "true";
   } catch (error) {

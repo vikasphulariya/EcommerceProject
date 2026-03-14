@@ -15,7 +15,7 @@ import {
   deleteDoc
 } from "firebase/firestore";
 import { ClipLoader } from "react-spinners";
-import { BiEnvelope, BiPhone, BiLogoWhatsapp, BiTrash } from "react-icons/bi";
+import { BiEnvelope, BiPhone, BiLogoWhatsapp, BiTrash, BiArrowBack } from "react-icons/bi";
 
 export default function Messages() {
   const user = useSelector((state) => state.user.user);
@@ -160,9 +160,9 @@ export default function Messages() {
 
   return (
     <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8 h-[calc(100vh-80px)]">
-      <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-sm border border-gray-200 h-full overflow-hidden">
+      <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-sm border border-gray-200 h-full overflow-hidden relative">
         {/* Left Column: Chat List */}
-        <div className="w-full md:w-1/3 lg:w-1/4 border-r border-gray-200 flex flex-col bg-gray-50/50 h-1/3 md:h-full shrink-0">
+        <div className={`w-full md:w-1/3 lg:w-1/4 border-r border-gray-200 flex-col bg-gray-50/50 h-full shrink-0 ${activeChat ? 'hidden md:flex' : 'flex'}`}>
           <div className="px-6 h-[72px] border-b border-gray-200 bg-white flex items-center shadow-sm shrink-0">
             <h2 className="text-xl font-bold text-gray-900 tracking-tight">Messages</h2>
           </div>
@@ -210,13 +210,19 @@ export default function Messages() {
         </div>
 
         {/* Right Column: Active Chat */}
-        <div className="w-full md:w-2/3 lg:w-3/4 flex flex-col bg-[#F0F2F5] h-2/3 md:h-full">
+        <div className={`w-full md:w-2/3 lg:w-3/4 flex-col bg-[#F0F2F5] h-full ${activeChat ? 'flex' : 'hidden md:flex'}`}>
           {activeChat ? (
             <>
               {/* Chat Header */}
-              <div className="px-6 h-[72px] border-b border-gray-200 flex items-center justify-between bg-white shadow-sm shrink-0">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700 rounded-full flex items-center justify-center font-bold border border-blue-50">
+              <div className="px-4 md:px-6 h-[72px] border-b border-gray-200 flex items-center justify-between bg-white shadow-sm shrink-0">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <button 
+                    onClick={() => setActiveChat(null)} 
+                    className="md:hidden p-2 -ml-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+                  >
+                    <BiArrowBack className="text-xl" />
+                  </button>
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700 rounded-full flex items-center justify-center font-bold border border-blue-50 shrink-0">
                     {otherUserData?.name?.[0] || otherParticipant.name?.[0] || "?"}
                   </div>
                   <div>

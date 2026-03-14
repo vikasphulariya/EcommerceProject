@@ -38,12 +38,23 @@ import Messages from "./pages/messages/Messages.jsx";
 import Categories from "./pages/categoryPage/Categories.jsx";
 import Deals from "./pages/Home/Deals.jsx";
 import MyListings from "./pages/myListings/MyListings.jsx";
+import StudyMaterial from "./pages/studyMaterial/StudyMaterial.jsx";
+import PublishMaterial from "./pages/studyMaterial/PublishMaterial.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
     <Route key={""} path="/" errorElement={<NoPage />} element={<CheckProfile><PageLayout /></CheckProfile>}>
       <Route path="/" element={<Home />} />
       <Route path="/complete-profile" element={<CompleteProfile />} />
+      <Route path="/study-material" element={<StudyMaterial />} />
+      <Route
+        path="/publish-material"
+        element={
+          <ProtectedPage>
+            <PublishMaterial />
+          </ProtectedPage>
+        }
+      />
       <Route
         path="/sell"
         element={
@@ -145,7 +156,7 @@ function App() {
     const userDocRef = doc(db, "users", user.uid);
     await onSnapshot(userDocRef, (doc) => {
       console.log(doc.data());
-      dispatch(setUser({ ...doc.data(), email: user.email }));
+      dispatch(setUser({ ...doc.data(), email: user.email, uid: user.uid }));
       dispatch(loadCartFromCloudAsync());
       dispatch(loadwishlistFromCloudAsync());
     });

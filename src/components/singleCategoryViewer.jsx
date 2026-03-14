@@ -66,7 +66,7 @@ function SingleCategoryViewer({ sectionTtile, category }) {
             ))}
           </div>
         ) : products.length > 0 ? (
-          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 scroll-smooth">
+          <div className="flex gap-4 overflow-x-auto custom-scrollbar pb-4 pt-2 pr-4 scroll-smooth">
             {products.map((product) => (
               <div key={product.id} className="min-w-[180px] md:min-w-[220px]">
                 <ProductCard product={product} />

@@ -41,7 +41,7 @@ function Footer() {
           <ul className="flex flex-col gap-4 text-sm font-bold">
             <li><Link to="/categories/all" className="hover:text-blue-500 transition-colors">All Products</Link></li>
             <li><Link to="/deals" className="hover:text-blue-500 transition-colors">Campus Deals</Link></li>
-            <li><Link to="/categories" className="hover:text-blue-500 transition-colors">Departments</Link></li>
+            <li><Link to="/categories" className="hover:text-blue-500 transition-colors">Categories</Link></li>
             <li><Link to="/sell" className="hover:text-blue-500 transition-colors">Start Selling</Link></li>
           </ul>
         </div>

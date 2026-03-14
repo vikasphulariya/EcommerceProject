@@ -53,3 +53,50 @@ export const createListing = async (listingData, imageFile, user) => {
     return { success: false, error };
   }
 };
+
+/**
+ * Delete a listing or study material from Firestore
+ */
+export const deleteResource = async (id, type) => {
+  try {
+    const { doc, deleteDoc } = await import("firebase/firestore");
+    const collectionName = type === "study" ? "study_materials" : "products";
+    await deleteDoc(doc(db, collectionName, id));
+    toast.success("Deleted successfully!");
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting resource:", error);
+    toast.error("Deletion failed!");
+    return { success: false, error };
+  }
+};
+
+/**
+ * Update an existing listing in Firestore
+ */
+export const updateListing = async (id, data, imageFile, user, type = "marketplace") => {
+  try {
+    const { doc, updateDoc } = await import("firebase/firestore");
+    let imageUrl = data.imgUrl;
+    
+    if (imageFile) {
+      imageUrl = await uploadImage(imageFile, user.uid);
+    }
+
+    const collectionName = type === "study" ? "study_materials" : "products";
+    const docRef = doc(db, collectionName, id);
+    
+    await updateDoc(docRef, {
+      ...data,
+      imgUrl: imageUrl,
+      updatedAt: new Date().toISOString()
+    });
+
+    toast.success("Listing updated successfully!");
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating listing:", error);
+    toast.error("Failed to update listing!");
+    return { success: false, error };
+  }
+};
