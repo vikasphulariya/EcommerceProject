@@ -6,19 +6,26 @@ function CategoriesBtn({ imgAddress, categoryName }) {
   return (
     <Link
       to={`/categories/${categoryName}`}
-      className="container  rounded-3xl gap-2 items-center justify-center px-2 min-w-max flex flex-col group hover:cursor-pointer"
+      className="flex flex-col items-center gap-3 group cursor-pointer transition-all active:scale-95 min-w-[90px] md:min-w-[110px]"
     >
       <div
-        className="img-wrapper rounded-full bg-gray-200 flex items-center justify-center  p-2  transition-all group-hover:p-1 group-hover:bg-gray-100 
-       md:p-4  md:group-hover:p-3"
+        className="relative flex items-center justify-center rounded-[2rem] bg-gray-50 border border-gray-100 shadow-sm p-4 md:p-6 transition-all duration-300 group-hover:bg-blue-600 group-hover:border-blue-500 group-hover:shadow-md group-hover:-translate-y-1"
         style={{
-          width: "clamp(3rem,7vw ,6rem)",
-          height: "clamp(3rem,7vw ,6rem)",
+          width: "clamp(4.5rem, 8vw, 6.5rem)",
+          height: "clamp(4.5rem, 8vw, 6.5rem)",
         }}
       >
-        <img src={imgAddress} alt={categoryName} />
+        <img 
+          src={imgAddress} 
+          alt={categoryName} 
+          className="w-full h-full object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
+        />
+        {/* Glow effect on hover */}
+        <div className="absolute inset-0 bg-blue-400/20 rounded-[2rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </div>
-      <span className=" text-xs md:text-base text-nowrap">{categoryName}</span>
+      <span className="text-xs md:text-sm font-bold text-gray-700 group-hover:text-blue-600 transition-colors tracking-tight text-center">
+        {categoryName}
+      </span>
     </Link>
   );
 }

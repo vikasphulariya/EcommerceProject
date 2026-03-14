@@ -12,7 +12,7 @@ function SignIn() {
     const data = Object.fromEntries(formData);
     setLoading(true);
     try {
-      const result = await registerNewUser(data.email, data.password,data);
+      const result = await registerNewUser(data.email, data.password, data);
       if (result instanceof Error) {
         // Handle error here
         toast(result.message);

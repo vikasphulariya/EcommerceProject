@@ -14,11 +14,14 @@ function ProtectedPage({ children }) {
   }, []);
   if (loading)
     return (
-      <>
-        <div className="  w-full grid place-items-center">
-          <ClipLoader color="#36d7b7" size={50} />
+      <div className="w-full min-h-[60vh] flex flex-col items-center justify-center gap-4">
+        <div className="relative">
+          <div className="w-12 h-12 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
         </div>
-      </>
+        <p className="text-xs font-black text-gray-400 uppercase tracking-widest animate-pulse">
+          Verifying Permissions...
+        </p>
+      </div>
     );
 
   return isLoggedIn ? <> {children}</> : <AuthNeeded />;

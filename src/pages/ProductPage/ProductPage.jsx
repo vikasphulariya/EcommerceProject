@@ -5,7 +5,12 @@ import { useParams } from "react-router";
 import { db } from "../../app/firebase/firebase";
 import { ClipLoader } from "react-spinners";
 import AddToWishlist from "../../components/AddToWishlist";
-import AddToCartBtn from "../../components/AddToCartBtn";
+import { BiFilterAlt, BiX, BiSliderAlt, BiChevronDown, BiEnvelope, BiPhoneCall } from "react-icons/bi";
+import ContactSellerBtn from "../../components/ContactSellerBtn";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { collection, query, where, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 const ProductLoader = () => (
   <div className="h-screen w-full grid place-items-center">
@@ -17,45 +22,94 @@ const ProductLoader = () => (
 );
 
 const ProductInfo = ({ product }) => {
-  console.log(product);
-  const discountPercentage =
-    100 - (product.discountPrice / product.price) * 100;
+  const [sellerData, setSellerData] = useState(null);
+  useEffect(() => {
+    const fetchSeller = async () => {
+      const docRef = doc(db, "users", product.sellerId);
+      const snap = await getDoc(docRef);
+      if (snap.exists()) setSellerData(snap.data());
+    };
+    fetchSeller();
+  }, [product.sellerId]);
 
   return (
-    <div className="flex flex-col sm:flex-row flex-wrap py-3">
-      <div className="w-full relative sm:w-1/2">
-        <AddToWishlist product={product} />
+    <div className="flex flex-col md:flex-row gap-8 lg:gap-12 bg-white rounded-2xl p-4 md:p-8 shadow-sm border border-gray-100">
+      {/* Left: Image Showcase */}
+      <div className="w-full md:w-1/2 lg:w-3/5 flex justify-center items-center bg-gray-50 rounded-2xl p-6 relative min-h-[300px] md:min-h-[400px]">
+        {/* Wishlist Button Overlay */}
+        <div className="absolute top-4 right-4 z-20">
+          <AddToWishlist product={product} />
+        </div>
         <img
-          src={product.imgUrl}
+          src={product.imgUrl || "https://placehold.co/800x600"}
           alt={product.name}
-          className="w-full h-auto"
+          className="w-full h-full object-contain max-h-[500px] drop-shadow-md mix-blend-multiply"
         />
       </div>
-      <div className="w-full flex flex-col gap-4 sm:w-1/2">
-        <div
-          className="flex gap-2"
-          style={{ fontSize: "clamp(0.75rem,2vw,1.25rem)" }}
-        >
-          <div className="min-w-max bg-gray-400 px-3 rounded-xl py-1">
-            ⭐ {product.rating}
-          </div>
-          <div className="min-w-max bg-cyan-400 px-3 rounded-xl py-1">
+
+      {/* Right: Product Details */}
+      <div className="w-full md:w-1/2 lg:w-2/5 flex flex-col pt-2">
+        {/* Badges */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          <span className="text-xs uppercase tracking-wider font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
             {product.category}
+          </span>
+          <span className="text-xs uppercase tracking-wider font-bold text-gray-600 bg-gray-100 px-3 py-1 rounded-full border border-gray-200">
+            {product.condition}
+          </span>
+        </div>
+
+        {/* Title */}
+        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight mb-2">
+          {product.name}
+        </h1>
+
+        {/* Price */}
+        <div className="text-4xl font-black text-blue-600 mb-6">
+          ₹{product.price}
+        </div>
+
+        {/* Description */}
+        <div className="mb-8 flex-grow">
+          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">
+            Description
+          </h3>
+          <p className="text-gray-700 leading-relaxed whitespace-pre-line text-base md:text-lg">
+            {product.description}
+          </p>
+        </div>
+
+        {/* Seller Info with Integrated Action */}
+        <div className="bg-gray-50 border border-gray-100 rounded-[2.5rem] p-6 mb-8 shadow-sm">
+          <h3 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] mb-6 block">
+            Seller Details
+          </h3>
+          <div className="flex items-center gap-5">
+            <div className="w-14 h-14 bg-gradient-to-br from-blue-100 to-indigo-100 text-blue-700 rounded-full flex items-center justify-center text-xl font-black uppercase shrink-0 shadow-inner">
+              {(sellerData?.name || product.sellerName || "S")[0]}
+            </div>
+            <div className="flex-grow">
+              <p className="text-gray-900 font-black text-xl leading-none mb-1">{sellerData?.name || product.sellerName}</p>
+              <p className="text-gray-500 text-sm font-medium">{sellerData?.college || product.sellerCollege}</p>
+              {sellerData?.isPublicContact && (
+                <div className="mt-3 pt-3 border-t border-gray-200/60 flex flex-col gap-2">
+                  <p className="text-xs font-bold text-blue-600 flex items-center gap-2">
+                    <BiEnvelope size={14} />
+                    {sellerData.email}
+                  </p>
+                  <p className="text-xs font-bold text-gray-500 flex items-center gap-2">
+                    <BiPhoneCall size={14} />
+                    {sellerData.mobile}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="min-w-max capitalize bg-orange-400 px-3 rounded-xl py-1">
-            {product.warranty} Warranty
+          
+          <div className="mt-8">
+            <ContactSellerBtn product={product} />
           </div>
         </div>
-        <h1 className="text-3xl font-bold">{product.name}</h1>
-        <p className="text-gray-500">{product.seller}</p>
-        <p className="text-xl font-bold flex gap-2">
-          <span className="line-through">₹{product.price}</span>
-          <span className="text-green-900">₹{product.discountPrice}</span>
-          <span className="bg-green-400 px-3 rounded-lg">
-            {discountPercentage.toFixed(2)}%
-          </span>
-        </p>
-        <AddToCartBtn product={product} />
       </div>
     </div>
   );
@@ -83,7 +137,7 @@ function ProductPage() {
       const productRef = doc(db, "products", productID);
       const data = await getDoc(productRef);
       if (data.exists()) {
-        setProduct(data.data());
+        setProduct({ id: data.id, ...data.data() });
       } else {
         setError(true);
       }
@@ -108,7 +162,7 @@ function ProductPage() {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 min-h-screen bg-gray-50/50">
       <ProductInfo product={product} />
     </div>
   );

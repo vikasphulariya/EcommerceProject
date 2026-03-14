@@ -1,35 +1,57 @@
-import ProductOnSaleCard from "./ProductOnSaleCard";
+import { useEffect, useState } from "react";
+import ProductCard from "./ProductCard";
+import { collection, getDocs, getFirestore, limit, orderBy, query } from "firebase/firestore";
 
 function ProductsOnSaleSection() {
-  let product = {
-    id: "2sdcsd",
-    name: "Samsung Galaxy S20",
-    price: 1000,
-    discountPrice: 800,
-    imgUrl:
-      "https://media-ik.croma.com/prod/https://media.croma.com/image/upload/v1715785282/Croma%20Assets/Communication/Mobiles/Images/268867_0_sstd64.png?tr=w-600",
-  };
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchLatestListings() {
+      try {
+        const db = getFirestore();
+        const productsRef = collection(db, "products");
+        // Fetch 8 most recently added items
+        const q = query(productsRef, orderBy("createdAt", "desc"), limit(8));
+        const querySnapshot = await getDocs(q);
+        
+        const latestItems = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setProducts(latestItems);
+      } catch (error) {
+        console.error("Error fetching latest products:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchLatestListings();
+  }, []);
+
+  if (loading) return null;
+
   return (
-    <div className=" bg-blue-700 w-full py-5 rounded-lg gap-2 px-2 min-[450px]:gap-3 min-[450px]:px-4  flex flex-row">
-      <div className="flex flex-col justify-between items-center">
-        <div className="flex w-max flex-col justify-center items-center ">
-          <h1 className="text-white text-base font-bold min-[450px]:text-lg sm:text-xl md:text-2xl">
-            Products On Sale
+    <div className="bg-blue-700 w-full py-5 rounded-lg gap-2 px-2 min-[450px]:gap-3 min-[450px]:px-4 flex flex-row shadow-inner">
+      <div className="flex flex-col justify-center items-center w-32 min-[450px]:w-40 md:w-48 shrink-0 px-1 py-4">
+        <div className="flex flex-col justify-center items-center text-center">
+          <h1 className="text-white text-lg font-bold min-[450px]:text-xl sm:text-2xl md:text-3xl leading-tight">
+            Latest <br className="hidden sm:block" /> Listings
           </h1>
-          <p className="text-white text-xs min-[450px]:text-base sm:text-lg">Shop now</p>
+          <p className="text-blue-200 mt-2 text-xs min-[450px]:text-sm sm:text-base font-medium">Fresh on campus</p>
         </div>
 
-        <button className="bg-white text-blue-700 text-sm  font-bold py-1 px-2 min-[450px]:py-1.5 min-[450px]:px-2.5 sm:py-2 sm:px-3 rounded">
+        <button className="bg-white hover:bg-gray-100 transition-colors text-blue-700 text-xs font-bold py-1.5 px-3 min-[450px]:py-2 min-[450px]:px-4 rounded-full shadow-md mt-6 w-full max-w-[120px]">
           View All
         </button>
       </div>
-      <div className="sale-products flex overflow-x-scroll gap-3 no-scrollbar">
-        <ProductOnSaleCard product={product} />
-        <ProductOnSaleCard product={product} />
-        <ProductOnSaleCard product={product} />
-        <ProductOnSaleCard product={product} />
-        <ProductOnSaleCard product={product} />
-        <ProductOnSaleCard product={product} />
+      <div className="flex overflow-x-scroll gap-3 no-scrollbar pb-2">
+        {products.length > 0 ? (
+          products.map((product) => (
+            <ProductCard key={product.id} product={product} className="min-w-[220px] max-w-[240px]" />
+          ))
+        ) : (
+          <div className="text-white flex items-center h-full px-4 italic opacity-80">
+            No listings available right now. Be the first to sell!
+          </div>
+        )}
       </div>
     </div>
   );

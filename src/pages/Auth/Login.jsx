@@ -58,7 +58,7 @@ function Login() {
             Nice to see you again
           </p>
           <form
-          aria-disabled={loading}
+            aria-disabled={loading}
             onSubmit={loginUser}
             className="w-full flex flex-col gap-3 px-7"
           >
@@ -69,7 +69,7 @@ function Login() {
                 type="email"
                 name="email"
                 id="email"
-                placeholder="Email"
+                placeholder="College Email (.edu)"
                 required
               />
             </label>

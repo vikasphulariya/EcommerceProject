@@ -6,37 +6,21 @@ function AboutUs({}) {
       <div>
         <img src={aboutUsImg} />
       </div>
-      <p className="discription my-1 text-justify">
-        Noobie Store is an innovative online store that offers a diverse
-        selection of digital gadgets, available for purchase in both cash and
-        installment options. Embodying the motto &quot;Join the digital
-        revolution today&quot; the website not only provides a seamless shopping
-        experience but also features a captivating blog section filled with
-        insightful reviews, articles, and videos about cutting-edge technology
-        and digital gadgets. Users can actively engage with the content through
-        comments and a question-answer section, fostering a dynamic community of
-        tech enthusiasts.
+      <h1 className="text-3xl font-bold text-blue-800 mb-4 mt-4">Welcome to UniMart</h1>
+      <p className="discription my-1 text-justify text-gray-700 leading-relaxed">
+        <strong>UniMart</strong> is an innovative campus-based e-commerce platform built exclusively for students. We understand that college life requires constant access to books, notes, lab tools, and everyday essentials. UniMart bridges the gap by providing a trusted, centralized marketplace where students can easily <strong>buy, sell, and exchange</strong> items with their peers right on campus. Embodying our goal to make academic life more affordable and sustainable, our platform not only offers a seamless shopping experience but also fosters a dynamic community of students helping students.
       </p>
-      <h3 className=" text-xl font-semibold mb-3 mt-2">
-        Some of Noobie Store{"'"}s impressive features:
+      <h3 className="text-xl font-semibold text-blue-800 mb-3 mt-6">
+        UniMart's Core Features:
       </h3>
-      <p className=" mb-5">
-
-        <li>Diverse digital gadgets for purchase in cash or installments.</li>
-        <li>
-          A blog with reviews and articles about the latest technology and
-          gadgets.
-        </li>
-        <li>User comments and Q&A section for community interaction.</li>
-        <li>
-          Represents a tech-savvy &quot;home&quot; with all necessary
-          technology.
-        </li>
-        <li>Easy-to-use interface for a great user experience.</li>
-        <li>Consistent and visually appealing design.</li>
-        <li>A hub for tech enthusiasts to connect and share insights.</li>
-        <li>Helps users make informed purchase decisions.</li>
-      </p>
+      <ul className="list-disc list-inside mb-5 flex flex-col gap-2 text-gray-700">
+        <li><strong>Peer-to-Peer Marketplace:</strong> Buy and sell directly with students on your campus.</li>
+        <li><strong>Academic Focused:</strong> A dedicated space for used textbooks, class notes, and lab equipment.</li>
+        <li><strong>Hostel & Daily Needs:</strong> Find or sell appliances, bicycles, and furniture when moving in or out.</li>
+        <li><strong>Verified Student Community:</strong> Safe transactions backed by mandatory academic profile completion.</li>
+        <li><strong>Sustainable Solutions:</strong> Reduce waste by passing down educational materials to juniors.</li>
+        <li><strong>Easy-to-use Interface:</strong> Designed specifically for fast, on-the-go mobile browsing between classes.</li>
+      </ul>
     </div>
   );
 }

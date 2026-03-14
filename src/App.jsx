@@ -31,13 +31,39 @@ import Cart from "./pages/cart/Cart.jsx";
 import AboutUs from "./pages/About/AboutUs.jsx";
 import CategoryPage from "./pages/categoryPage/CategoryPage.jsx";
 import ContactUs from "./pages/contactUs/ContactUs.jsx";
+import CheckProfile from "./components/CheckProfile.jsx";
+import CompleteProfile from "./pages/Auth/CompleteProfile.jsx";
+import AddListing from "./pages/sell/AddListing.jsx";
+import Messages from "./pages/messages/Messages.jsx";
+import Categories from "./pages/categoryPage/Categories.jsx";
+import Deals from "./pages/Home/Deals.jsx";
+import MyListings from "./pages/myListings/MyListings.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements([
-    <Route key={""} path="/" errorElement={<NoPage />} element={<PageLayout />}>
+    <Route key={""} path="/" errorElement={<NoPage />} element={<CheckProfile><PageLayout /></CheckProfile>}>
       <Route path="/" element={<Home />} />
+      <Route path="/complete-profile" element={<CompleteProfile />} />
+      <Route
+        path="/sell"
+        element={
+          <ProtectedPage>
+            <AddListing />
+          </ProtectedPage>
+        }
+      />
       <Route path="/product/:productID" element={<ProductPage />} />
       <Route path="/categories/:categoryName" element={<CategoryPage />} />
+      <Route path="/categories" element={<Categories />} />
+      <Route path="/deals" element={<Deals />} />
+      <Route
+        path="/my-listings"
+        element={
+          <ProtectedPage>
+            <MyListings />
+          </ProtectedPage>
+        }
+      />
       <Route
         path="/profile"
         element={
@@ -59,6 +85,14 @@ const router = createBrowserRouter(
         element={
           <ProtectedPage>
             <Cart />
+          </ProtectedPage>
+        }
+      />
+      <Route
+        path="/messages"
+        element={
+          <ProtectedPage>
+            <Messages />
           </ProtectedPage>
         }
       />
@@ -149,4 +183,3 @@ function App() {
 }
 
 export default App;
-

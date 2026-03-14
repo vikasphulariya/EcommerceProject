@@ -20,6 +20,7 @@ export const registerNewUser = async (email, password, info) => {
         uid: userCredential.user.uid,
         ...info,
         password: "null",
+        profileCompleted: false,
       });
       toast("Email Verification Pending");
     } catch (error) {
