@@ -27,7 +27,6 @@ function SingleCategoryViewer({ sectionTtile, category }) {
   async function getProductsByCategory(category) {
     const db = getFirestore();
     const productsRef = collection(db, "products");
-    console.log(category);
     const q = query(
       productsRef,
       where("category", "==", category)
@@ -37,7 +36,6 @@ function SingleCategoryViewer({ sectionTtile, category }) {
 
     const productss = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     setProducts(productss);
-    console.log(productss);
     setTimeout(() => {
       setLoading(false);
     }, 50);
@@ -54,7 +52,7 @@ function SingleCategoryViewer({ sectionTtile, category }) {
           to={`/categories/${category}`}
           className="group flex items-center gap-1 text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors"
         >
-          View All 
+          View All
           <MdArrowForwardIos className="inline transition-transform group-hover:translate-x-1" size={12} />
         </Link>
       </div>
@@ -75,8 +73,8 @@ function SingleCategoryViewer({ sectionTtile, category }) {
           </div>
         ) : (
           <div className="py-12 flex flex-col items-center justify-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100">
-             <p className="text-gray-400 font-medium italic">No items listed yet</p>
-             <Link to="/sell" className="mt-2 text-blue-600 text-sm font-bold hover:underline">+ Add First Listing</Link>
+            <p className="text-gray-400 font-medium italic">No items listed yet</p>
+            <Link to="/sell" className="mt-2 text-blue-600 text-sm font-bold hover:underline">+ Add First Listing</Link>
           </div>
         )}
       </div>

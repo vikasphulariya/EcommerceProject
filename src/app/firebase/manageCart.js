@@ -14,7 +14,6 @@ export const AddToCartFirebase = async (userUID, product) => {
   // Add the product to the cart subcollection
   try {
     await setDoc(cartRef, product);
-    console.log("Product added to cart successfully!");
     return { success: true, message: "Product added to cart successfully!" };
   } catch (error) {
     console.error("Error adding product to cart: ", error);
@@ -28,7 +27,6 @@ export const removeProductFromCart = async (userUID, product) => {
   // Add the product to the cart subcollection
   try {
     await deleteDoc(cartRef, product);
-    console.log("Product added to cart successfully!");
     return { success: true, message: "Product added to cart successfully!" };
   } catch (error) {
     console.error("Error adding product to cart: ", error);
@@ -42,7 +40,6 @@ export const updateProductInCart = async (userUID, product) => {
   // Add the product to the cart subcollection
   try {
     await updateDoc(cartRef, product);
-    console.log("Product added to cart successfully!");
     return { success: true, message: "Product added to cart successfully!" };
   } catch (error) {
     console.error("Error adding product to cart: ", error);

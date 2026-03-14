@@ -55,9 +55,7 @@ export const loadCartFromCloudAsync = createAsyncThunk(
   "cart/loadCart",
   async (_, thunkAPI) => {
     const state = thunkAPI.getState();
-    console.log(state);
     const userUID = state.user.user.uid;
-    console.log(userUID);
     try {
       const response = await loadCartFromCloud(userUID);
       return response; // Return the cart products array
@@ -88,7 +86,6 @@ const cartSlice = createSlice({
         const product = state.products.find(
           (item) => item.id === action.payload.id
         );
-        console.log(product);
         if (product) {
           product.quantity += action.payload.value;
         }

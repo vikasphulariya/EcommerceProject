@@ -39,7 +39,6 @@ const SELLER_EMAIL = "demo@unimart.edu";
 const SELLER_COLLEGE = "UniMart Institute of Technology";
 
 async function clearAndSeed() {
-  console.log("Cleaning up existing products...");
   const querySnapshot = await getDocs(collection(db, "products"));
   let deletedCount = 0;
   for (const item of querySnapshot.docs) {
@@ -48,9 +47,7 @@ async function clearAndSeed() {
       deletedCount++;
     }
   }
-  console.log(`Deleted ${deletedCount} existing products.`);
 
-  console.log("Starting seeding process with vibrant random-color placeholders...");
   let count = 0;
 
   for (const category of CATEGORIES) {
@@ -58,10 +55,10 @@ async function clearAndSeed() {
       const randomIndex = Math.floor(Math.random() * productSamples[category].length);
       const productName = productSamples[category][randomIndex];
       const price = Math.floor(Math.random() * 5000) + 100;
-      
+
       // Select random vibrant color
       const bgHex = BRIGHT_COLORS[Math.floor(Math.random() * BRIGHT_COLORS.length)];
-      
+
       // Font size increased to 60 for better visibility
       // The text is also bolded in the URL params
       const imageUrl = `https://placehold.jp/60/${bgHex}/ffffff/600x800.png?text=${encodeURIComponent(productName)}&css=%7B%22font-weight%22%3A%22900%22%7D`;

@@ -142,7 +142,6 @@ function App() {
 
   const getDataFromLocal = async () => {
     auth.onAuthStateChanged(async (user) => {
-      // console.log(user.emailVerified);
       if (user && user.emailVerified) {
         await loadUserDataFromCloudAsync(user);
       } else {
@@ -157,7 +156,6 @@ function App() {
   const loadUserDataFromCloudAsync = async (user) => {
     const userDocRef = doc(db, "users", user.uid);
     await onSnapshot(userDocRef, (doc) => {
-      console.log(doc.data());
       dispatch(setUser({ ...doc.data(), email: user.email, uid: user.uid }));
       dispatch(loadCartFromCloudAsync());
       dispatch(loadwishlistFromCloudAsync());

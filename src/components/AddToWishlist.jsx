@@ -12,7 +12,6 @@ function AddToWishlist({ product }) {
   const wishListedProduct = useSelector((state) =>
     state.wishlist.products.find((item) => item.id === product.id)
   );
-  console.log(wishListedProduct);
 
   const dispatch = useDispatch();
   const addToWishListBtn = () => {
