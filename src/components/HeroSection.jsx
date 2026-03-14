@@ -47,7 +47,7 @@ function HeroSection() {
             <div className="flex items-center gap-3 text-blue-100">
               <BiGroup size={24} />
               <div className="text-left">
-                <p className="text-white font-bold leading-none">10k+ Active</p>
+                <p className="text-white font-bold leading-none">Growing Network</p>
                 <p className="text-[11px] opacity-70">Peer Community</p>
               </div>
             </div>

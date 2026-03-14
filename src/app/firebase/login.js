@@ -1,5 +1,5 @@
 // loginWithFirebase.js
-import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from "firebase/auth";
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence, sendPasswordResetEmail } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { setUser, removeUser } from "../store/userSlice";
 import { store } from "../store/store";
@@ -28,9 +28,9 @@ export const loginWithFirebase = async (email, password, rememberMe = false) => 
 
       if (userInfoSnap.exists()) {
         let userInfo = userInfoSnap.data();
-        updateUserInfo("emailVerified",true)
+        updateUserInfo("emailVerified", true, false);
         store.dispatch(
-          setUser({ ...userInfo, emailVerified: result.user.emailVerified })
+          setUser({ ...userInfo, emailVerified: result.user.emailVerified, uid: result.user.uid })
         );
         store.dispatch(loadCartFromCloudAsync())
         store.dispatch(loadwishlistFromCloudAsync())
@@ -40,7 +40,15 @@ export const loginWithFirebase = async (email, password, rememberMe = false) => 
   } catch (err) {
     auth.signOut();
     store.dispatch(removeUser());
-    return new Error(err.message);
   }
 };
 
+
+export const resetPassword = async (email) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    return true;
+  } catch (error) {
+    return new Error(error.message);
+  }
+};

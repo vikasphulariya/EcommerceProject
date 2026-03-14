@@ -19,20 +19,6 @@ function Footer() {
           <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
             The ultimate campus marketplace for students. Buy, sell, and trade within your community with trust and ease.
           </p>
-          <div className="flex gap-4">
-            <a href="#" className="w-10 h-10 bg-gray-800 rounded-xl flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all transform hover:-translate-y-1">
-              <BiLogoFacebookCircle size={20} />
-            </a>
-            <a href="#" className="w-10 h-10 bg-gray-800 rounded-xl flex items-center justify-center hover:bg-blue-500 hover:text-white transition-all transform hover:-translate-y-1">
-              <BiLogoTwitter size={20} />
-            </a>
-            <a href="#" className="w-10 h-10 bg-gray-800 rounded-xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all transform hover:-translate-y-1">
-              <BiLogoInstagram size={20} />
-            </a>
-            <a href="#" className="w-10 h-10 bg-gray-800 rounded-xl flex items-center justify-center hover:bg-blue-700 hover:text-white transition-all transform hover:-translate-y-1">
-              <BiLogoLinkedin size={20} />
-            </a>
-          </div>
         </div>
 
         {/* Quick Links */}
@@ -72,18 +58,6 @@ function Footer() {
                   <HiOutlinePhone size={18} />
                 </div>
                 <span>+1 (234) 567-890</span>
-             </div>
-             
-             {/* Simple Email Signup (Visual Only) */}
-             <div className="mt-4 relative">
-                <input 
-                  type="email" 
-                  placeholder="Ask us anything..." 
-                  className="w-full bg-gray-800 border border-gray-700 rounded-xl py-3 pl-4 pr-12 text-xs outline-none focus:border-blue-500 transition-colors"
-                />
-                <button className="absolute right-2 top-1.5 bottom-1.5 px-3 bg-blue-600 rounded-lg text-white hover:bg-blue-700 transition-colors">
-                  <BiSend size={16} />
-                </button>
              </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { loginWithFirebase } from "../../app/firebase/login";
+import { loginWithFirebase, resetPassword } from "../../app/firebase/login";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import { BiEnvelope, BiLockAlt, BiShow, BiHide, BiLogInCircle, BiErrorCircle } from "react-icons/bi";
@@ -12,6 +12,37 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [rememberMe, setRememberMe] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
+  const [resetLoading, setResetLoading] = useState(false);
+
+  const handleForgotPassword = async () => {
+    const emailToReset = emailInput.trim();
+    if (!emailToReset) {
+      toast.error("Please enter your email address above first to reset your password");
+      return;
+    }
+    
+    // Basic email validation before spamming firebase
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailToReset)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setResetLoading(true);
+    try {
+      const result = await resetPassword(emailToReset);
+      if (result instanceof Error) {
+        toast.error(result.message);
+      } else {
+        toast.success("Password reset link sent to your email!");
+      }
+    } catch (error) {
+      toast.error("Failed to send reset email");
+    } finally {
+      setResetLoading(false);
+    }
+  };
 
   const validate = (data) => {
     const newErrors = {};
@@ -98,8 +129,12 @@ function Login() {
                     type="email"
                     name="email"
                     id="email"
+                    value={emailInput}
                     placeholder="name@college.edu"
-                    onChange={() => setErrors(prev => ({ ...prev, email: '' }))}
+                    onChange={(e) => {
+                      setEmailInput(e.target.value);
+                      setErrors(prev => ({ ...prev, email: '' }));
+                    }}
                   />
                 </div>
                 {errors.email && (
@@ -159,7 +194,13 @@ function Login() {
                   </div>
                   <span className="text-sm font-bold text-gray-500 group-hover:text-gray-700 transition-colors">Keep me signed in</span>
                 </label>
-                <button type="button" className="text-xs font-black text-blue-600 hover:text-blue-700 uppercase tracking-wider">
+                <button 
+                  type="button" 
+                  onClick={handleForgotPassword}
+                  disabled={resetLoading || loading}
+                  className="flex items-center gap-1 text-xs font-black text-blue-600 hover:text-blue-700 uppercase tracking-wider transition-colors disabled:opacity-50"
+                >
+                  {resetLoading ? <ClipLoader size={12} color="#2563EB" /> : null}
                   Forgot?
                 </button>
               </div>

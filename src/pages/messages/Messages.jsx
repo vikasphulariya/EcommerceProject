@@ -15,7 +15,7 @@ import {
   deleteDoc
 } from "firebase/firestore";
 import { ClipLoader } from "react-spinners";
-import { BiEnvelope, BiPhone, BiLogoWhatsapp, BiTrash, BiArrowBack } from "react-icons/bi";
+import { BiEnvelope, BiPhone, BiLogoWhatsapp, BiTrash, BiArrowBack, BiSend } from "react-icons/bi";
 
 export default function Messages() {
   const user = useSelector((state) => state.user.user);
@@ -193,7 +193,7 @@ export default function Messages() {
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700 rounded-full flex items-center justify-center font-bold text-lg shrink-0 shadow-sm border border-blue-50">
                       {other.name?.[0] || "?"}
                     </div>
-                    <div className="flex-grow overflow-hidden">
+                    <div className="flex-grow min-w-0 overflow-hidden">
                       <h3 className="font-bold text-gray-900 truncate">
                         {other.name}
                       </h3>
@@ -210,30 +210,30 @@ export default function Messages() {
           {activeChat ? (
             <>
               {/* Chat Header */}
-              <div className="px-4 md:px-6 py-3 md:py-0 md:h-[72px] border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3 bg-white shadow-sm shrink-0">
-                <div className="flex items-center gap-2 md:gap-3">
+              <div className="px-4 md:px-6 py-2.5 md:py-0 md:h-[72px] border-b border-gray-200 flex items-center justify-between gap-2 bg-white shadow-sm shrink-0">
+                <div className="flex items-center gap-2 md:gap-3 flex-grow min-w-0">
                   <button 
                     onClick={() => setActiveChat(null)} 
-                    className="md:hidden p-2 -ml-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+                    className="md:hidden p-2 -ml-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors shrink-0"
                   >
                     <BiArrowBack className="text-xl" />
                   </button>
                   <button
                     type="button"
                     onClick={() => otherUserData?.uid && navigate(`/user/${otherUserData.uid}`)}
-                    className="flex items-center gap-2 md:gap-3 text-left"
+                    className="flex items-center gap-2 md:gap-3 text-left overflow-hidden w-full group/btn"
                   >
                     <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700 rounded-full flex items-center justify-center font-bold border border-blue-50 shrink-0">
                       {otherUserData?.name?.[0] || otherParticipant.name?.[0] || "?"}
                     </div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-900 leading-tight">
+                    <div className="flex-grow min-w-0">
+                      <h2 className="text-base md:text-lg font-bold text-gray-900 leading-tight truncate group-hover/btn:text-blue-600 transition-colors">
                         {otherUserData?.name || otherParticipant.name}
                       </h2>
                       {otherUserData?.isPublicContact && (
-                        <div className="flex gap-3 mt-0.5">
-                          <p className="text-xs text-blue-600 font-medium">{otherUserData.email}</p>
-                          <p className="text-xs text-gray-500 font-medium">{otherUserData.mobile}</p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <p className="text-[10px] md:text-xs text-blue-600 font-medium truncate max-w-[80px] md:max-w-[150px]">{otherUserData.email}</p>
+                          <p className="text-[10px] md:text-xs text-gray-500 font-medium truncate">{otherUserData.mobile}</p>
                         </div>
                       )}
                     </div>
@@ -241,20 +241,20 @@ export default function Messages() {
                 </div>
 
                 {otherUserData?.isPublicContact && (
-                  <div className="flex items-center gap-2 md:gap-3">
+                  <div className="flex items-center gap-1 md:gap-3 shrink-0">
                     <a 
                       href={`mailto:${otherUserData.email}`}
                       className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all"
                       title="Send Email"
                     >
-                      <BiEnvelope size={22} />
+                      <BiEnvelope size={20} className="md:w-6 md:h-6" />
                     </a>
                     <a 
                       href={`tel:${otherUserData.mobile}`}
                       className="p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-full transition-all"
                       title="Call Now"
                     >
-                      <BiPhone size={22} />
+                      <BiPhone size={20} className="md:w-6 md:h-6" />
                     </a>
                     <a 
                       href={`https://wa.me/${otherUserData.mobile.replace(/\D/g, "")}`}
@@ -263,7 +263,7 @@ export default function Messages() {
                       className="p-2 text-gray-500 hover:text-[#25D366] hover:bg-[#25D366]/10 rounded-full transition-all"
                       title="Chat on WhatsApp"
                     >
-                      <BiLogoWhatsapp size={24} />
+                      <BiLogoWhatsapp size={22} className="md:w-[26px] md:h-[26px]" />
                     </a>
                   </div>
                 )}
@@ -314,7 +314,7 @@ export default function Messages() {
                                 : "bg-white border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm"
                             }`}
                           >
-                            <p className="leading-relaxed font-medium">{msg.text}</p>
+                            <p className="leading-relaxed font-medium whitespace-pre-wrap break-words">{msg.text}</p>
                             <div className="flex items-center justify-end gap-2 mt-1">
                               {isMe && (
                                 <button
@@ -345,32 +345,35 @@ export default function Messages() {
               </div>
 
               {/* Chat Input */}
-              <div className="p-3 md:p-4 bg-[#F0F2F5] shrink-0">
+              <div className="p-3 md:p-5 bg-white shrink-0 border-t border-gray-100 flex shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)]">
                 <form
                   onSubmit={handleSendMessage}
-                  className="flex gap-2 items-center bg-white p-2 rounded-full shadow-sm border border-gray-200"
+                  className="flex gap-2 md:gap-3 items-end w-full max-w-4xl mx-auto"
                 >
-                  <input
-                    type="text"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Type a message..."
-                    className="flex-grow px-4 py-2 bg-transparent outline-none text-gray-800 placeholder-gray-400"
-                  />
+                  <div className="flex-grow relative bg-gray-50 border-2 border-transparent focus-within:border-blue-200 focus-within:bg-white rounded-3xl transition-all shadow-inner overflow-hidden flex items-center min-h-[50px] md:min-h-[56px]">
+                    <textarea
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyDown={(e) => {
+                         if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            if (newMessage.trim() && !loadingChats) {
+                               handleSendMessage(e);
+                            }
+                         }
+                      }}
+                      placeholder="Type a message..."
+                      className="w-full px-5 py-3 md:py-4 bg-transparent outline-none text-gray-800 placeholder-gray-400 font-medium resize-none max-h-[120px] custom-scrollbar text-sm md:text-base"
+                      rows={1}
+                      style={{ minHeight: "50px" }}
+                    />
+                  </div>
                   <button
                     type="submit"
                     disabled={!newMessage.trim() || loadingChats}
-                    className="relative bg-gradient-to-r from-blue-600 to-blue-700 text-white h-10 w-10 md:h-12 md:w-24 flex items-center justify-center rounded-full font-bold shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 active:scale-95 transition-all shrink-0 group overflow-hidden"
+                    className="flex-shrink-0 h-[50px] w-[50px] md:h-[56px] md:w-[56px] bg-blue-600 text-white rounded-full flex items-center justify-center font-bold shadow-lg shadow-blue-600/30 hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100 disabled:shadow-none"
                   >
-                    {/* Shine effect overlay */}
-                    <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"></div>
-                    
-                    <div className="flex items-center gap-2 z-10 pointer-events-none">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                      </svg>
-                      <span className="hidden md:inline tracking-wider">SEND</span>
-                    </div>
+                    <BiSend size={24} className={`transform transition-transform ${newMessage.trim() ? "translate-x-0.5 -translate-y-0.5" : ""}`} />
                   </button>
                 </form>
               </div>

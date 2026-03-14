@@ -4,17 +4,20 @@ import { store } from "../store/store";
 import { updatePassword, verifyBeforeUpdateEmail } from "firebase/auth";
 import { toast } from "react-toastify";
 
-export const updateUserInfo = async (name, value) => {
+export const updateUserInfo = async (name, value, showToast = true) => {
   try {
     const uid = store.getState().user.user.uid;
-    console.log(`Updated ${name} to ${value} for user ${uid}`);
 
     const userDocRef = doc(db, "users", uid);
     await setDoc(userDocRef, { [name]: value }, { merge: true });
-    toast(`Successfully updated ${name}.`);
+    if (showToast) {
+      toast(`Successfully updated ${name}.`);
+    }
     return "true";
   } catch (error) {
-    toast(error.message);
+    if (showToast) {
+      toast(error.message);
+    }
     console.error(error.message);
   }
 };

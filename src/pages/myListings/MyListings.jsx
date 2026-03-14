@@ -22,12 +22,16 @@ export default function MyListings() {
   useEffect(() => {
     if (user?.uid) {
       fetchAllItems();
+    } else {
+      setLoading(false);
     }
   }, [user]);
 
   const fetchAllItems = async () => {
     setLoading(true);
     try {
+      if (!user?.uid) return setLoading(false);
+
       // Fetch Products - Remove orderBy to avoid index requirement for new fields
       const qProd = query(
         collection(db, "products"),
